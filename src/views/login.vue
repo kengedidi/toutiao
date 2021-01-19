@@ -73,18 +73,26 @@ export default {
         // await:等待，它可以实现   先等待异步操作执行完毕，再继续后面的代码的执行
         // 它可以获取then中的回调参数，并返回
         // await必须保证它所在的函数是async函数
+        //  --正则验证正确，符合正则，然后就再发送后台请求数据
           try{
               let res = await userlogin(this.user);
-              console.log('----' + res.data.message);
+              console.log('----' + res.data.message + res);
+              
               if(res.status == 200){
+                 // 后台请求数据--登陆成功：
                 this.$toast(res.data.message)
+                // 登陆成功，将token存储到本地存储当中
+                localStorage.setItem('toutiao_59_token',res.data.data.token);
+                this.$router.push({name:'personal'})
               }
           }
           catch{
+            // 登陆失败，在数据库没有对应的匹配数据
             this.$toast('用户名或密码输入不正确，在数据库没有对应的匹配数据')
           }
 
       }else{
+        //正则验证失败，用户名和密码输入不正确
         this.$toast('请输入正确的用户名和密码，还没有去请求')
       }
     },

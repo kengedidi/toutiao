@@ -59,7 +59,9 @@ export default {
       let res = await userRegister(this.user);
             console.log(res);
         if(res.status == 200 ){
-          this.$toast.success(res.data.message)
+          this.$toast.success(res.data.message);
+          //注册成功就跳转页面
+          this.$router.push({name:'login'})
         }else{
           this.$toast.fail('注册失败，请重试')
         }
