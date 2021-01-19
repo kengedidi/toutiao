@@ -10,17 +10,20 @@
           placeholder="手机号/用户名"
           @input="halder" 
           :value="user.username">
-        </hminput> --> 
-        <hminput placeholder="手机号/用户名" v-model="user.username" :rules='/^1\d{10}$/'>
-        <!-- |^1\d{4} -->
-        <!-- 正则：/格式/ ， ^以1开头，\d代表0-9数字，{10} 次数为10次，| 表示或者，  ^1\d{4} ：以1开头，0-9数字，出现4次  {}表示次数，可以固定，也可以区间 // -->
+        </hminput> -->
+        <hminput
+          placeholder="手机号/用户名"
+          v-model="user.username"
+          :rules="/^1\d{10}$/"
+        >
+          <!-- |^1\d{4} -->
+          <!-- 正则：/格式/ ， ^以1开头，\d代表0-9数字，{10} 次数为10次，| 表示或者，  ^1\d{4} ：以1开头，0-9数字，出现4次  {}表示次数，可以固定，也可以区间 // -->
         </hminput>
         <!-- v-model相当于：做了2件事：
         1. 为元素的value属性赋值
         2. 监听自组件发出的input事件
          -->
-        <hminput placeholder="密码" v-model="user.password">
-        </hminput>
+        <hminput placeholder="密码" v-model="user.password"> </hminput>
       </div>
 
       <p class="tips">
@@ -40,6 +43,9 @@
 // 引入的自定义模块
 import hmbutton from "@/components/mybutton.vue";
 import hminput from "@/components/myinput.vue";
+// 引入登陆方法
+import { userlogin } from '@/apis/user.js' ;
+
 export default {
   data() {
     return {
@@ -55,8 +61,18 @@ export default {
     // 登陆/注册 按钮
     login() {
       // console.log("登陆/注册按钮被点击了");
-      console.log(this.user.username,this.user.password);
-
+      // console.log(this.user.username,this.user.password);
+      if(/^1\d{10}$/.test(this.user.username) && /^.{3,}$/.test(this.user.password)){
+          userlogin(this.user)
+          .then((res)=>{
+            console.log(res);
+          })
+          .catch((err)=>{
+            console.log(err);
+          })
+      }else{
+        this.$toast('您的用户名和密码输入不正确')
+      }
     },
     // input输入框
     halder(v) {
