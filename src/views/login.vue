@@ -81,11 +81,11 @@ export default {
               }
           }
           catch{
-            this.$toast('请输入正确的用户名和密码')
+            this.$toast('用户名或密码输入不正确，在数据库没有对应的匹配数据')
           }
 
       }else{
-        this.$toast('您的用户名和密码输入不正确')
+        this.$toast('请输入正确的用户名和密码，还没有去请求')
       }
     },
     // input输入框

@@ -17,13 +17,14 @@
         2. 监听自组件发出的input事件
          -->
         <hminput placeholder="密码" v-model="user.password"> </hminput>
+        <hminput placeholder="昵称" v-model="user.nickname"> </hminput>
       </div>
       <p class="tips">
         已有账号？
         <a href="#/login" class="">去登陆</a>
       </p>
       <!-- 登陆注册点击按钮 -->
-      <hmbutton @click="login" type="paimary">
+      <hmbutton type="paimary">
         <span class="iconfont iconicon-test"></span>
         <span>注册</span>
       </hmbutton>
@@ -32,7 +33,29 @@
 </template>
 
 <script>
-export default {};
+// 引入的自定义模块
+import hmbutton from "@/components/mybutton.vue";
+import hminput from "@/components/myinput.vue";
+
+export default {
+  data() {
+    return {
+      user: {
+        username: "",
+        password: "",
+        nickname: "",
+      },
+    };
+  },
+  components: {
+    hmbutton,hminput
+  },
+  methods: {
+    register(){
+
+    }
+  }
+};
 </script>
 
 
