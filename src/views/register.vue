@@ -24,7 +24,7 @@
         <a href="#/login" class="">去登陆</a>
       </p>
       <!-- 登陆注册点击按钮 -->
-      <hmbutton type="paimary">
+      <hmbutton type="paimary" @click="register">
         <span class="iconfont iconicon-test"></span>
         <span>注册</span>
       </hmbutton>
@@ -37,6 +37,9 @@
 import hmbutton from "@/components/mybutton.vue";
 import hminput from "@/components/myinput.vue";
 
+//引入封装的注册的axios
+import { userRegister } from '@/apis/user.js'
+
 export default {
   data() {
     return {
@@ -47,12 +50,19 @@ export default {
       },
     };
   },
+  //注册引入的自定义模块
   components: {
     hmbutton,hminput
   },
-  methods: {
-    register(){
-
+  methods: {  
+    async register(e){
+      let res = await userRegister(this.user);
+            console.log(res);
+        if(res.status == 200 ){
+          this.$toast.success(res.data.message)
+        }else{
+          this.$toast.fail('注册失败，请重试')
+        }
     }
   }
 };
