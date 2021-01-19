@@ -59,17 +59,31 @@ export default {
   },
   methods: {
     // 登陆/注册 按钮
-    login() {
+    async login() {
       // console.log("登陆/注册按钮被点击了");
       // console.log(this.user.username,this.user.password);
       if(/^1\d{10}$/.test(this.user.username) && /^.{3,}$/.test(this.user.password)){
-          userlogin(this.user)
-          .then((res)=>{
-            console.log(res);
-          })
-          .catch((err)=>{
-            console.log(err);
-          })
+          // userlogin(this.user)
+          // .then((res)=>{
+          //   console.log(res);
+          // })
+          // .catch((err)=>{
+          //   console.log(err);
+          // })
+        // await:等待，它可以实现   先等待异步操作执行完毕，再继续后面的代码的执行
+        // 它可以获取then中的回调参数，并返回
+        // await必须保证它所在的函数是async函数
+          try{
+              let res = await userlogin(this.user);
+              console.log('----' + res.data.message);
+              if(res.status == 200){
+                this.$toast(res.data.message)
+              }
+          }
+          catch{
+            this.$toast('请输入正确的用户名和密码')
+          }
+
       }else{
         this.$toast('您的用户名和密码输入不正确')
       }
