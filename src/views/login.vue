@@ -10,8 +10,10 @@
           placeholder="手机号/用户名"
           @input="halder" 
           :value="user.username">
-        </hminput> -->
-        <hminput placeholder="手机号/用户名" v-model="user.username" :rules='/^1\d{10}$|^1\d{4}/'>
+        </hminput> --> 
+        <hminput placeholder="手机号/用户名" v-model="user.username" :rules='/^1\d{10}$/'>
+        <!-- |^1\d{4} -->
+        <!-- 正则：/格式/ ， ^以1开头，\d代表0-9数字，{10} 次数为10次，| 表示或者，  ^1\d{4} ：以1开头，0-9数字，出现4次  {}表示次数，可以固定，也可以区间 // -->
         </hminput>
         <!-- v-model相当于：做了2件事：
         1. 为元素的value属性赋值
