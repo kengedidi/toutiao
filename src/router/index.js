@@ -24,7 +24,7 @@ const router = new VueRouter({
     // 个人中心
     {
       name: 'personal',
-      path: '/personal',
+      path: '/personal/:id',
       component: () => import('@/views/personal.vue')
     },
   ]

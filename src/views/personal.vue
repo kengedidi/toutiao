@@ -2,15 +2,12 @@
   <div class="personal">
     <router-link to="/edit_profile">
       <div class="profile">
-        <img
-          src="http://img1.imgtn.bdimg.com/it/u=3757784226,1202878475&fm=26&gp=0.jpg"
-          alt
-        />
+        <img :src="'http://127.0.0.1:3000' + current.head_img" alt />
         <div class="profile-center">
           <div class="name">
-            <span class="iconfont iconxingbienan"></span>我就是我
+            <span class="iconfont iconxingbienan"></span>{{ current.nickname }}
           </div>
-          <div class="time">2019-9-24</div>
+          <div class="time">{{ current.create_date }}</div>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
@@ -24,14 +21,28 @@
 </template>
 
 <script>
-import hmcell from '@/components/hmcell.vue'
+import hmcell from "@/components/hmcell.vue";
+import { getUserInfo } from "@/apis/user.js";
+// import axios from '@/utils/myaxios.vue'
 export default {
   data() {
-    return {};
+    return {
+      current: {},
+    };
   },
   components: {
-    hmcell
-  }
+    hmcell,
+  },
+  //钩子函数，页面加载完毕后自动触发 //获取路由参数 this.$router
+  async mounted() {
+    // console.log(this.$route.params.id);
+    let res = await getUserInfo(this.$route.params.id);
+    console.log(res);
+    if (res.data.message == "获取成功") {
+      this.current = res.data.data;
+      console.log(this.current.head_img);
+    }
+  },
 };
 </script>
 

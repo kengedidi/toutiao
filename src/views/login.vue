@@ -83,7 +83,7 @@ export default {
                 this.$toast(res.data.message)
                 // 登陆成功，将token存储到本地存储当中
                 localStorage.setItem('toutiao_59_token',res.data.data.token);
-                this.$router.push({name:'personal'})
+                this.$router.push({path:'personal/' + res.data.data.user.id})
               }
           }
           catch{
