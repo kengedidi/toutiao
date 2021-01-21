@@ -7,7 +7,7 @@
           <div class="name">
             <span class="iconfont iconxingbienan"></span>{{ current.nickname }}
           </div>
-          <div class="time">{{ current.create_date }}</div>
+          <div class="time">{{ current.create_date | dateFormat}}</div>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
@@ -24,6 +24,8 @@
 import hmcell from "@/components/hmcell.vue";
 import { getUserInfo } from "@/apis/user.js";
 // import axios from '@/utils/myaxios.vue'
+// import moment from 'moment'
+import {dateFormat} from '@/utils/myfilters.js'
 export default {
   data() {
     return {
@@ -33,14 +35,18 @@ export default {
   components: {
     hmcell,
   },
+  //使用过滤器 局部过滤器：在组件内部创建的过滤器， dateFormat在外部封装了
+  filters: {
+    dateFormat
+  },
   //钩子函数，页面加载完毕后自动触发 //获取路由参数 this.$router
   async mounted() {
     // console.log(this.$route.params.id);
     let res = await getUserInfo(this.$route.params.id);
-    console.log(res);
+    // console.log(res);
     if (res.data.message == "获取成功") {
       this.current = res.data.data;
-      console.log(this.current.head_img);
+      // console.log(this.current.head_img);
     }
   },
 };
