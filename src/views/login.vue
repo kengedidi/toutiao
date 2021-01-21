@@ -97,10 +97,10 @@ export default {
       }
     },
     // input输入框
-    halder(v) {
-      // console.log(v);
-      this.user.username = v;
-    },
+    // halder(v) {
+    //   // console.log(v);
+    //   this.user.username = v;
+    // },
   },
   // 注册引入的自定义模块
   components: {

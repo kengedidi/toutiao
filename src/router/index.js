@@ -40,14 +40,18 @@ router.beforeEach((to,from,next)=>{
    // 我们需要判断一下用户当前目标路由是否是需要验证的路由
 
   if(to.path.indexOf('/personal') !== -1){
-      //从本地存储当中取出token，判断token是否有值，是否有token，有token我才让你跳转，没有token连跳转都不让跳转
+    // 如果数据多，我们会用数组来做：创建一个，就往数组里面添加一个，然后遍历数组中是否有这个值。
+    // let arr = ['/personal', '/aa']
+
+      //从本地存储当中取出token，判断token是否有值，是否有token，有token我才让你跳转，没有token连跳转都不让跳转； （判断用户是否有合法的登陆状态，如果有则继续跳转，如果没有则重定向到登陆）
       let token = localStorage.getItem('toutiao_59_token');
       if(token){
         //如果token有值 ，则为true
         next();
       }else{
-        console.log(1111);
+        // console.log(1111);
         //token没有值，为undefined,undefined为false，就跳转到登陆，先登陆
+        // 重定向到登陆页面
         next({name : 'login'})
       }
   }else{

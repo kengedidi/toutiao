@@ -57,7 +57,7 @@ export default {
   methods: {  
     async register(e){
       let res = await userRegister(this.user);
-            console.log(res);
+            // console.log(res);
         if(res.status == 200 ){
           this.$toast.success(res.data.message);
           //注册成功就跳转页面
