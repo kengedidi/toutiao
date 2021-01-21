@@ -96,8 +96,8 @@ export default {
         this.$toast('请输入正确的用户名和密码，还没有去请求')
       }
     },
-    // input输入框
-    // halder(v) {
+    // input输入框-- 有了v-model就不需要这个
+    // halder(v) {8
     //   // console.log(v);
     //   this.user.username = v;
     // },

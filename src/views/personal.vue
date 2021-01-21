@@ -51,7 +51,6 @@ export default {
     if (res.data.message == "获取成功") {
       // 第二种：（推荐）把axios变成当前vue实例组件成员 ： 渲染之前，就对数据进行改造。改造好了再渲染。
       res.data.data.head_img =  axios.defaults.baseURL + res.data.data.head_img;
-      // console.log(this.current.head_img);
       this.current = res.data.data;
       // console.log(this.current.head_img);
     }

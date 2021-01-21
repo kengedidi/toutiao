@@ -26,6 +26,7 @@ export const getUserInfo = function (id) {
     // 一定要注意，参数是路由参数
     //默认是get请求，所以可以不用写method:'get',
     url: `/user/${id}`,
-    headers: { Authorization: localStorage.getItem('toutiao_59_token') }
+    // 添加了拦截器就不用每个需要授权的请求都传递 请求报文头token了
+    // headers: { Authorization: localStorage.getItem('toutiao_59_token') }
   })
 }
