@@ -1,25 +1,26 @@
 <template>
   <div class="editUserInfo">
     <!-- 顶部区域 -->
-    <myheader title="编辑资料">
+    <myheader title="编辑资料" >
       <!-- slot:指定内容放置到那个插槽中 -->
-      <span class="iconfont iconjiantou2" slot="left"></span>
+      <!-- @click="$router.back() 还回上一层 -->
+      <span class="iconfont iconjiantou2" slot='left'  @click="$router.back()"></span>
       <span
         class="van-icon van-icon-wap-home-o"
         style="font-size: 22px; color: red"
-        slot="right"
+        slot='right'
       ></span>
     </myheader>
     <!-- 头像区域 -->
     <div class="userimg">
-      <img class="img" src="../assets/aa.png" alt="加载失败" />
+      <img class="img" :src="current.head_img" alt="加载失败" />
       <!-- 文件上传组件 -->
       <van-uploader :after-read="afterRead" />
     </div>
     <!-- 单元格区域 -->
-    <hmcell title="昵称" desc="火星人"> </hmcell>
+    <hmcell title="昵称" :desc="current.nickname"> </hmcell>
     <hmcell title="密码" desc="******"> </hmcell>
-    <hmcell title="性别" desc="男"> </hmcell>
+    <hmcell title="性别" :desc="current.gender == 1 ? '男' : '女' "> </hmcell>
   </div>
 </template>
 
@@ -30,10 +31,18 @@ import myheader from "@/components/myheader.vue";
 import hmcell from "@/components/hmcell.vue";
 // 引入封装好的axios/api
 import {uploadFile} from '@/apis/upload.js'
+import {getUserInfo} from '@/apis/user.js'
+import axios from '@/utils/myaxios.js'
+
 export default {
   components: {
     myheader,
     hmcell,
+  },
+  data () {
+    return {
+      current:{}
+    }
   },
   methods: {
    async afterRead(myfile) {
@@ -44,9 +53,17 @@ export default {
       formdata.append('file',myfile.file)
       // 实现文件上传
       let res = await uploadFile(formdata)
-      console.log(res);
+      // console.log(res);
     },
   },
+ async mounted () {
+    // 页面一加载完，就根据路由参数id获取个人详情信息
+    let res = await getUserInfo(this.$route.params.id)
+    // 对img路径数据改造
+    res.data.data.head_img = axios.defaults.baseURL + res.data.data.head_img;
+    this.current = res.data.data
+      console.log(this.current);
+  }
 };
 </script>
 
