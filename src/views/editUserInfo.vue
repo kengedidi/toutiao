@@ -28,15 +28,23 @@
 import myheader from "@/components/myheader.vue";
 // 引入封装好的单元格
 import hmcell from "@/components/hmcell.vue";
+// 引入封装好的axios/api
+import {uploadFile} from '@/apis/upload.js'
 export default {
   components: {
     myheader,
     hmcell,
   },
   methods: {
-    afterRead(file) {
+   async afterRead(myfile) {
       // 此时可以自行将文件上传至服务器
-      console.log(file);
+      // console.log(myfile);
+      // 收集文件数据
+      let formdata = new FormData;
+      formdata.append('file',myfile.file)
+      // 实现文件上传
+      let res = await uploadFile(formdata)
+      console.log(res);
     },
   },
 };
