@@ -1,5 +1,5 @@
 <template>
-  <div class="hmcell">
+  <div class="hmcell" @click="handlerClick">
     <div class="left">{{title}}</div>
     <div class="right">{{desc}} <span class="iconfont iconjiantou1"></span></div>
   </div>
@@ -12,7 +12,12 @@ export default {
       
     };
   },
-  props: ["title","desc"]
+  props: ["title","desc"],
+  methods: {
+    handlerClick(e){
+      this.$emit('click',e)
+    }
+  }
 };
 </script>
 

@@ -52,8 +52,8 @@ export default {
       user:{
         // username:'13800138000',
         // password:'123'
-        username:'',
-        password:''
+        username:'13800138000',
+        password:'123'
       }
     };
   },
