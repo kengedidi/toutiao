@@ -31,7 +31,7 @@ import myheader from "@/components/myheader.vue";
 import hmcell from "@/components/hmcell.vue";
 // 引入封装好的axios/api
 import {uploadFile} from '@/apis/upload.js'
-import {getUserInfo} from '@/apis/user.js'
+import {getUserInfo,updateUserInfo} from '@/apis/user.js'
 import axios from '@/utils/myaxios.js'
 
 export default {
@@ -51,9 +51,18 @@ export default {
       // 收集文件数据
       let formdata = new FormData;
       formdata.append('file',myfile.file)
-      // 实现文件上传
+      // 01-实现文件上传
       let res = await uploadFile(formdata)
-      // console.log(res);
+      console.log(res);
+      if(res.data.message == '文件上传成功'){
+        // 02-编辑用户头像
+        let res2 = await updateUserInfo(this.current.id,{head_img:res.data.data.url})
+        // console.log(res2);
+        //弹框提示修改成功 ,不用引入，因为在main.js 已经use全局了。
+        this.$toast(res2.data.message)
+        // 重新渲染头像，自动刷新
+        this.current.head_img = axios.defaults.baseURL + res.data.data.url
+      }
     },
   },
  async mounted () {

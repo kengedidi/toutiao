@@ -30,3 +30,12 @@ export const getUserInfo = function (id) {
     // headers: { Authorization: localStorage.getItem('toutiao_59_token') }
   })
 }
+
+//编辑用户信息
+export const updateUserInfo = function (id,data){
+   return axios ({
+      method:'post',
+      url:`/user_update/${id}`,
+      data
+   })
+}
