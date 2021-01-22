@@ -11,8 +11,8 @@ axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么,获取token进行传递
   let token = localStorage.getItem('toutiao_59_token')
   // 通过请求头的方式传递token
-  // console.log(config); //config是默认的参数，里面有请求报文头
-    if(token){
+  // console.log(config); //config是默认的参数，但默认里面是没有请求报文头Authorization，所以 config.headers.Authorization添加一个 然后赋值token
+    if(token){  
       // 判断有无token，有就
       config.headers.Authorization = token
     }

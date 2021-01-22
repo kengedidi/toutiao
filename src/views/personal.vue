@@ -1,12 +1,13 @@
 <template>
   <div class="personal">
-    <router-link to="/edit_profile">
+    <!-- 传递id动态绑定 跳转到 编辑用户信息 页面 -->
+    <router-link :to="'/editUserInfo/' + $route.params.id">
       <div class="profile">
         <!-- 渲染之前，就对数据进行改造。改造好了再渲染 -->
         <img :src=" current.head_img" alt />
         <div class="profile-center">
           <div class="name">
-            <span class="iconfont iconxingbienan"></span>{{ current.nickname }}
+            <span :class="{iconfont:true, iconxingbienan : current.gender == 1 ,iconxingbienv : current.gender == 0 }"></span>{{ current.nickname }}
           </div>
           <div class="time">{{ current.create_date | dateFormat }}</div>
         </div>
