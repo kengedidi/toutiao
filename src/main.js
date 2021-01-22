@@ -9,9 +9,9 @@ import '@/styles/reset.less'
 import router from '@/router/index.js'
 
 //引入vant，调用里面其中的一个方法toast
-import { Toast } from 'vant'
+import { Toast, Uploader } from 'vant'
 // use之后就会在全局的vue实例上挂载一个$toast
-Vue.use(Toast)
+Vue.use(Toast).use(Uploader)
 // 以后每一个组件可以直接使用
 
 new Vue({
