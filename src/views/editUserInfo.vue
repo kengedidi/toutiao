@@ -74,7 +74,18 @@
     </van-dialog>
 
     <!-- ------------性别 -->
-    <hmcell title="性别" :desc="current.gender == 1 ? '男' : '女'"> </hmcell>
+    <hmcell title="性别" :desc="current.gender == 1 ? '男' : '女'" @click="gendershow = !gendershow "> </hmcell>
+    <van-dialog
+      v-model="gendershow"
+      title="编辑性别"
+      show-cancel-button
+     @confirm='updateGender'
+     @cancel="current.gender = editvalue.gender"
+    >
+    <van-picker :columns="['女','男']"
+                  :default-index="current.gender"
+                  @change='genderChange' />
+   </van-dialog>
   </div>
 </template>
 
@@ -101,6 +112,8 @@ export default {
       nickshow: false,
       // 编辑密码
       passshow: false,
+      //编辑性别
+      gendershow:false,
       // editvalue 是用来方便我们编辑时的数据展示和数据获取。 editvalue： 绑定是弹出框的值
       editvalue: {
         originpass: "", //原密码
@@ -154,7 +167,7 @@ export default {
           let res = await updateUserInfo(this.current.id, {
             password: this.editvalue.newpass,
           });
-          console.log(res);
+          // console.log(res);
           // 修改成功后：
           // 更新本地存储的数据
           userobj.password = this.editvalue.newpass;
@@ -175,24 +188,23 @@ export default {
     // ---------修改密码---添加用户体验，阻止模态框的关闭
     beforeClose(action, done) {
       // 调用方法：  done(false)
-      console.log(action);
+      // console.log(action);
       if (action == "confirm") {
         //点击确认
-        let toutiao_59_password = JSON.parse(localStorage.getItem('toutiao_59_password'));
+        let toutiao_59_password = JSON.parse(
+          localStorage.getItem("toutiao_59_password")
+        );
         if (this.editvalue.originpass !== toutiao_59_password.password) {
           //原密码不正确
-          console.log('aa');
           done(false);
         } else {
           console.log(111);
           // 原密码正确，再判断新密码正则
           if (!/^.{3,}$/.test(this.editvalue.newpass)) {
             //新密码正则 不符合
-            // console.log(2);
             done(false);
           } else {
             // 新密码正则 符合
-            console.log(222);
             done();
           }
         }
@@ -201,6 +213,20 @@ export default {
         done();
       }
     },
+    // ----------修改性别
+   async updateGender(){
+      let res = await updateUserInfo(this.current.id,{gender:this.editvalue.gender})
+      // console.log(res);
+      // 更新页面
+      this.current.gender = this.editvalue.gender
+      // 提示用户
+      this.$toast.success('性别修改成功')
+    },
+    // 获取gender值
+    genderChange(q,qq,index){
+        // console.log(index);
+        this.editvalue.gender = index
+    }
   },
   async mounted() {
     // 页面一加载完，就根据路由参数id获取个人详情信息
@@ -208,7 +234,7 @@ export default {
     // 对img路径数据改造
     res.data.data.head_img = axios.defaults.baseURL + res.data.data.head_img;
     this.current = res.data.data;
-    console.log(res.data.data);
+    console.log(this.current);
     // console.log(this.current);
     // 仅仅是方便我们编辑时的数据展示和数据获取
     // {...this.current} ...是展开运算符(深拷贝）
