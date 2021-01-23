@@ -24,15 +24,20 @@
     </div>
 
     <!-- 单元格区域 -->
-    <!-- 昵称 -->
+    <!-- ------------昵称 -->
     <hmcell @click="nickshow = !nickshow" title="昵称" :desc="current.nickname">
     </hmcell>
     <!-- required 必填项 -->
     <!-- @confirm="updateNickname" : 当用户提交后，触发updateNickname函数，修改对应的值 -->
     <!-- @cancel="editvalue.nickname = current.nickname" ： 当用户点击取消后，修改对应的值 -->
-
-    <van-dialog v-model="nickshow" title="编辑昵称" show-cancel-button  @confirm="updateNickname" @cancel="editvalue.nickname = current.nickname">
-    <!--  v-model="editvalue.nickname" ： 这里如果绑定current ，则用户打开弹出框，修改了然后又取消了。页面也会改变了 -->
+    <van-dialog
+      v-model="nickshow"
+      title="编辑昵称"
+      show-cancel-button
+      @confirm="updateNickname"
+      @cancel="editvalue.nickname = current.nickname"
+    >
+      <!--  v-model="editvalue.nickname" ： 这里如果绑定current ，则用户打开弹出框，修改了然后又取消了。页面也会改变了 -->
       <van-field
         v-model="editvalue.nickname"
         error
@@ -42,10 +47,33 @@
       />
     </van-dialog>
 
+    <!-- ------------密码 -->
+    <hmcell title="密码" desc="******" @click="passshow = !passshow"> </hmcell>
+    <van-dialog
+      v-model="passshow"
+      title="编辑密码"
+      show-cancel-button
+      @confirm="updatePass"
+      @cancel="editvalue.originpass = editvalue.newpass = ''"
+      :before-close="beforeClose"
+    >
+      <van-field
+        error
+        required
+        label="旧密码"
+        placeholder="请输入原密码"
+        v-model="editvalue.originpass"
+      />
+      <van-field
+        error
+        required
+        label="新密码"
+        placeholder="请输入新密码"
+        v-model="editvalue.newpass"
+      />
+    </van-dialog>
 
-    <!-- 密码 -->
-    <hmcell title="密码" desc="******"> </hmcell>
-    <!-- 性别 -->
+    <!-- ------------性别 -->
     <hmcell title="性别" :desc="current.gender == 1 ? '男' : '女'"> </hmcell>
   </div>
 </template>
@@ -69,9 +97,15 @@ export default {
     return {
       // current 是用来渲染页面的一个对象。  current 绑定是显示页面的值
       current: {},
+      // 编辑昵称
       nickshow: false,
+      // 编辑密码
+      passshow: false,
       // editvalue 是用来方便我们编辑时的数据展示和数据获取。 editvalue： 绑定是弹出框的值
-      editvalue: {},
+      editvalue: {
+        originpass: "", //原密码
+        newpass: "", //用户输入的新密码
+      },
     };
   },
   methods: {
@@ -90,22 +124,83 @@ export default {
         let res2 = await updateUserInfo(this.current.id, {
           head_img: res.data.data.url,
         });
-        // console.log(res2);
         //弹框提示修改成功 ,不用引入，因为在main.js 已经use全局了。
         this.$toast(res2.data.message);
         // 重新渲染头像，自动刷新
         this.current.head_img = axios.defaults.baseURL + res.data.data.url;
       }
     },
-    // ---------编辑昵称 （点解提交后触发）
-    async updateNickname(){
-      let res = await updateUserInfo(this.current.id,{nickname:this.editvalue.nickname})
+    // ---------修改昵称 （点击提交后触发）
+    async updateNickname() {
+      let res = await updateUserInfo(this.current.id, {
+        nickname: this.editvalue.nickname,
+      });
       console.log(res);
       // 修改成功后,修改 展示页面current的nickname值
-      this.current.nickname = this.editvalue.nickname
+      this.current.nickname = this.editvalue.nickname;
       // 并且提示修改成功
-      this.$toast('昵称修改成功')
-    }
+      this.$toast("昵称修改成功");
+    },
+    // ---------修改密码 （点击提交后触发）
+    async updatePass() {
+      //获取本地存储好的用户密码
+      let userobj = JSON.parse(localStorage.getItem("toutiao_59_password"));
+      // console.log(toutiao_password);
+      //判断用户输入的原密码是否输入正确
+      if (userobj.password == this.editvalue.originpass) {
+        // 原密码正确：在判断新密码是否符合正则
+        if (/^.{3,}$/.test(this.editvalue.newpass)) {
+          //符合正则：发送服务器请求 进行密码修改
+          let res = await updateUserInfo(this.current.id, {
+            password: this.editvalue.newpass,
+          });
+          console.log(res);
+          // 修改成功后：
+          // 更新本地存储的数据
+          userobj.password = this.editvalue.newpass;
+          localStorage.setItem("toutiao_59_password", JSON.stringify(userobj));
+          // 提示用户
+          this.$toast.success("密码修改成功");
+          //清空输入框
+          this.editvalue.originpass = this.editvalue.newpass = "";
+        } else {
+          //新密码不符合正则
+          this.$toast.fail("请输入3位及以上的新密码");
+        }
+      } else {
+        // 原密码不正确：
+        this.$toast.fail("原密码输入错误");
+      }
+    },
+    // ---------修改密码---添加用户体验，阻止模态框的关闭
+    beforeClose(action, done) {
+      // 调用方法：  done(false)
+      console.log(action);
+      if (action == "confirm") {
+        //点击确认
+        let toutiao_59_password = JSON.parse(localStorage.getItem('toutiao_59_password'));
+        if (this.editvalue.originpass !== toutiao_59_password.password) {
+          //原密码不正确
+          console.log('aa');
+          done(false);
+        } else {
+          console.log(111);
+          // 原密码正确，再判断新密码正则
+          if (!/^.{3,}$/.test(this.editvalue.newpass)) {
+            //新密码正则 不符合
+            // console.log(2);
+            done(false);
+          } else {
+            // 新密码正则 符合
+            console.log(222);
+            done();
+          }
+        }
+      } else {
+        //单击取消
+        done();
+      }
+    },
   },
   async mounted() {
     // 页面一加载完，就根据路由参数id获取个人详情信息
@@ -113,11 +208,11 @@ export default {
     // 对img路径数据改造
     res.data.data.head_img = axios.defaults.baseURL + res.data.data.head_img;
     this.current = res.data.data;
+    console.log(res.data.data);
     // console.log(this.current);
     // 仅仅是方便我们编辑时的数据展示和数据获取
     // {...this.current} ...是展开运算符(深拷贝）
-    this.editvalue = { ...this.current };
-    // console.log(this.editvalue);
+    this.editvalue.nickname = this.current.nickname;
   },
 };
 </script>

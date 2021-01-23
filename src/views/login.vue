@@ -76,13 +76,15 @@ export default {
         //  --正则验证正确，符合正则，然后就再发送后台请求数据
           try{
               let res = await userlogin(this.user);
-              console.log('----' + res.data.message + res);
+              // console.log(res);
               
               if(res.status == 200){
                  // 后台请求数据--登陆成功：
                 this.$toast(res.data.message)
                 // 登陆成功，将token存储到本地存储当中
                 localStorage.setItem('toutiao_59_token',res.data.data.token);
+                // 登陆成功，将密码存储到本地存储当中（这样做虽然不安全，但是以后公司会加密？）
+                localStorage.setItem('toutiao_59_password',res.config.data);
                 this.$router.push({path:'personal/' + res.data.data.user.id})
               }
           }

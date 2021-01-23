@@ -11,13 +11,11 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   props: ["title"],
 };
 </script>
-
 <style lang="less" scoped>
 .header {
   height: 50px;

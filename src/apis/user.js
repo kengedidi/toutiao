@@ -32,6 +32,7 @@ export const getUserInfo = function (id) {
 }
 
 //编辑用户信息
+//文档说明用户编辑 要传id和需要修改的数据
 export const updateUserInfo = function (id,data){
    return axios ({
       method:'post',

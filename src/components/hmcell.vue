@@ -4,14 +4,8 @@
     <div class="right">{{desc}} <span class="iconfont iconjiantou1"></span></div>
   </div>
 </template>
-
 <script>
 export default {
-  data() {
-    return {
-      
-    };
-  },
   props: ["title","desc"],
   methods: {
     handlerClick(e){
@@ -20,7 +14,6 @@ export default {
   }
 };
 </script>
-
 <style lang="less" scoped>
 .hmcell {
   height: 60px;

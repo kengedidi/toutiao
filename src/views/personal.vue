@@ -1,4 +1,5 @@
 <template>
+<!-- 个人中心页面 -->
   <div class="personal">
     <!-- 传递id动态绑定 跳转到 编辑用户信息 页面 -->
     <router-link :to="'/editUserInfo/' + $route.params.id">
@@ -48,7 +49,7 @@ export default {
   async mounted() {
     // console.log(this.$route.params.id);
     let res = await getUserInfo(this.$route.params.id);
-    console.log(res);
+    // console.log(res);
     if (res.data.message == "获取成功") {
       // 第二种：（推荐）把axios变成当前vue实例组件成员 ： 渲染之前，就对数据进行改造。改造好了再渲染。
       res.data.data.head_img =  axios.defaults.baseURL + res.data.data.head_img;

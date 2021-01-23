@@ -46,7 +46,7 @@ const router = new VueRouter({
 router.beforeEach((to,from,next)=>{
    // 我们需要判断一下用户当前目标路由是否是需要验证的路由
 
-  if(to.path.indexOf('/personal') !== -1){
+  if(to.path.indexOf('/personal') !== -1 || to.path.indexOf('/editUserInfo') !== -1  ){
     // 如果数据多，我们会用数组来做：创建一个，就往数组里面添加一个，然后遍历数组中是否有这个值。
     // let arr = ['/personal', '/aa']
 
