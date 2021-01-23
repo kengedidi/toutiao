@@ -9,6 +9,18 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   //使用routes进行路由的配置
   routes: [
+    //重定义（默认页面跳转首页）
+    {
+      name: 'default',
+      path: '/',
+      component: () => import('@/views/index.vue')
+    },
+    //首页
+    {
+      name: 'index',
+      path: '/index',
+      component: () => import('@/views/index.vue')
+    },
     // 登陆
     {
       name: 'login',
