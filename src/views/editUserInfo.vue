@@ -13,6 +13,7 @@
         class="van-icon van-icon-wap-home-o"
         style="font-size: 22px; color: red"
         slot="right"
+        @click="$router.push({name:'index'})"
       ></span>
     </myheader>
 
@@ -222,7 +223,7 @@ export default {
       // 提示用户
       this.$toast.success('性别修改成功')
     },
-    // 获取gender值
+    //  ----------修改性别-获取gender值
     genderChange(q,qq,index){
         // console.log(index);
         this.editvalue.gender = index

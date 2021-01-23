@@ -20,6 +20,7 @@
     <hmcell title="我的跟帖" desc="跟帖/回复"></hmcell>
     <hmcell title="我的收藏" desc="文章/视频"></hmcell>
     <hmcell title="设置"></hmcell>
+    <hmbutton type="danger" style="margin:20px auto 0" @click="exit">退出</hmbutton>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import { getUserInfo } from "@/apis/user.js";
 // axios 引入之后可以使用，但是并不是当前组件实例的成员，所以不能this.调成，this.是调用当前vue组件成员的
 import axios from "@/utils/myaxios.js";
 import { dateFormat } from "@/utils/myfilters.js";
+import hmbutton from "@/components/mybutton.vue";
 export default {
   data() {
     return {
@@ -40,6 +42,7 @@ export default {
   },
   components: {
     hmcell,
+    hmbutton
   },
   //使用过滤器 局部过滤器：在组件内部创建的过滤器， dateFormat在外部封装了
   filters: {
@@ -57,6 +60,16 @@ export default {
       // console.log(this.current.head_img);
     }
   },
+  methods: {
+    // 退出
+    exit(){
+      // 删除本地存储的密码 和 token
+      localStorage.removeItem('toutiao_59_password')
+      localStorage.removeItem('toutiao_59_token')
+      // 跳转到首页
+      this.$router.push({path:'/index'})
+    }
+  }
 };
 </script>
 
@@ -65,6 +78,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: #eee;
+  
 }
 a {
   color: #666;
