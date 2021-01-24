@@ -1,6 +1,7 @@
 //引入封装的axios
 import axios from '@/utils/myaxios.js'
 
+// 此文件封装 用户信息 的api
 //登陆 
 export const userlogin = function (data) {
   return axios({

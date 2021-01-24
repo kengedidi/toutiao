@@ -189,28 +189,27 @@ export default {
     // ---------修改密码---添加用户体验，阻止模态框的关闭
     beforeClose(action, done) {
       // 调用方法：  done(false)
-      // console.log(action);
+      console.log(action);
       if (action == "confirm") {
-        //点击确认
+        //点击确认按钮
         let toutiao_59_password = JSON.parse(
           localStorage.getItem("toutiao_59_password")
-        );
+        ); //取出本地存储好的密码，来判断与用户输的旧密码是否一致
         if (this.editvalue.originpass !== toutiao_59_password.password) {
-          //原密码不正确
+          //原密码不正确--弹出框 不关闭
           done(false);
         } else {
-          console.log(111);
-          // 原密码正确，再判断新密码正则
+          // 原密码正确，再判断用户输入新密码 是否符合正则规则
           if (!/^.{3,}$/.test(this.editvalue.newpass)) {
-            //新密码正则 不符合
+            //新密码正则 不符合 -- 弹出框不关闭
             done(false);
           } else {
-            // 新密码正则 符合
+            // 新密码正则 符合 -- 弹出框关闭
             done();
           }
         }
       } else {
-        //单击取消
+        //点击取消按钮
         done();
       }
     },
