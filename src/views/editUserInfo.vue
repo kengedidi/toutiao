@@ -13,7 +13,7 @@
         class="van-icon van-icon-wap-home-o"
         style="font-size: 22px; color: red"
         slot="right"
-        @click="$router.push({name:'index'})"
+        @click="$router.push({ name: 'index' })"
       ></span>
     </myheader>
 
@@ -75,8 +75,14 @@
     </van-dialog>
 
     <!-- ------------性别 -->
-    <hmcell title="性别" :desc="current.gender == 1 ? '男' : '女'" @click="gendershow = !gendershow "> </hmcell>
-    <van-dialog
+    <hmcell
+      title="性别"
+      :desc="current.gender == 1 ? '男' : '女'"
+      @click="gendshow = !gendshow"
+    >
+    </hmcell>
+    <!-- 第一种： 用dialog 弹出框 做编辑性别 -->
+    <!-- <van-dialog
       v-model="gendershow"
       title="编辑性别"
       show-cancel-button
@@ -86,7 +92,15 @@
     <van-picker :columns="['女','男']"
                   :default-index="current.gender"
                   @change='genderChange' />
-   </van-dialog>
+   </van-dialog> -->
+
+    <!-- 第二种： 用ActionSheet 面板 做编辑性别 -->
+    <van-action-sheet
+      v-model="gendshow"
+      :actions="[{ name: '女' }, { name: '男' }]"
+      @select="onSelect"
+      close-on-click-action
+    />
   </div>
 </template>
 
@@ -114,7 +128,9 @@ export default {
       // 编辑密码
       passshow: false,
       //编辑性别
-      gendershow:false,
+      gendershow: false,
+      // 面板组件-编辑性别
+      gendshow: false,
       // editvalue 是用来方便我们编辑时的数据展示和数据获取。 editvalue： 绑定是弹出框的值
       editvalue: {
         originpass: "", //原密码
@@ -214,19 +230,39 @@ export default {
       }
     },
     // ----------修改性别
-   async updateGender(){
-      let res = await updateUserInfo(this.current.id,{gender:this.editvalue.gender})
-      // console.log(res);
-      // 更新页面
-      this.current.gender = this.editvalue.gender
-      // 提示用户
-      this.$toast.success('性别修改成功')
-    },
+    // async updateGender() {
+    //   let res = await updateUserInfo(this.current.id, {
+    //     gender: this.editvalue.gender,
+    //   });
+    //   // console.log(res);
+    //   // 更新页面
+    //   this.current.gender = this.editvalue.gender;
+    //   // 提示用户
+    //   this.$toast.success("性别修改成功");
+    // },
     //  ----------修改性别-获取gender值
-    genderChange(q,qq,index){
-        // console.log(index);
-        this.editvalue.gender = index
-    }
+    // genderChange(q, qq, index) {
+    //   // console.log(index);
+    //   this.editvalue.gender = index;
+    // },
+
+    // ------------ 面板组件 -- 修改性别
+    async onSelect(item) {
+      // console.log(item); // 获取到用户选择了男还是女
+      let mygender = "";
+      console.log(mygender);
+      if (item.name == "女") {
+        mygender = 0;
+      } else {
+        mygender = 1;
+      }
+      let res = await updateUserInfo(this.current.id, {
+        gender: mygender,
+      });
+      console.log(res);
+      // 更新页面
+      this.current.gender = mygender;
+    },
   },
   async mounted() {
     // 页面一加载完，就根据路由参数id获取个人详情信息
