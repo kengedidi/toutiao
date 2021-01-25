@@ -1,39 +1,101 @@
 <template>
-<!-- 这个文件用来封装文章块 -->
-  <div class="single">
+  <!-- 这个文件用来封装文章块 -->
+  <div
+    class="single"
+    v-if="post.type == 1 && post.cover.length < 3"
+    @click="$router.push({ path: `/articleDetail/${post.id}` })"
+  >
     <div class="left">
-      <p class="content">{{post.title}}</p>
+      <p class="content">{{ post.title }}</p>
       <p class="info">
-        <span>作者:{{post.user.nickname}}</span>
-        <span>有{{post.comment_length}}人跟帖</span> 
+        <span>{{ post.user.nickname }}</span>
+        <span>{{ post.comment_length }}跟帖</span>
       </p>
     </div>
     <img :src="axios.defaults.baseURL + post.cover[0].url" alt />
   </div>
+
+  <div
+    class="single2"
+    v-else-if="post.type === 2"
+    @click="$router.push({ path: `/articleDetail/${post.id}` })"
+  >
+    <p class="content">{{ post.title }}</p>
+    <div class="playarea">
+      <img :src="axios.defaults.baseURL + post.cover[0].url" alt />
+      <div class="playicon">
+        <van-icon name="play" />
+      </div>
+    </div>
+    <p class="info">
+      <span>{{ post.user.nickname }}</span>
+      <span>{{ post.comment_length }}跟帖</span>
+    </p>
+  </div>
+
+  <div
+    class="single3"
+    v-else-if="post.type === 1 && post.cover.length >= 3"
+    @click="$router.push({ path: `/articleDetail/${post.id}` })"
+  >
+    <p class="content">{{ post.title }}</p>
+    <div class="imgs">
+      <img
+        :src="axios.defaults.baseURL + item.url"
+        alt
+        v-for="item in post.cover"
+        :key="item.id"
+      />
+    </div>
+    <p class="info">
+      <span>{{ post.user.nickname }}</span>
+      <span>{{ post.comment_length }}跟帖</span>
+    </p>
+  </div>
 </template>
 
 <script>
-import axios from '@/utils/myaxios.js'
+import axios from "@/utils/myaxios.js";
 export default {
   props: {
-    post:{
-      type:Object, //传过来的值类型要是一个对象
-      required:true //必须传值
-    }
+    post: {
+      type: Object, //传过来的值类型要是一个对象
+      required: true, //必须传值
+    },
   },
-  data () {
+  data() {
     return {
-      axios:axios
-    }
-  }
-}
+      axios: axios,
+    };
+  },
+};
 </script>
+
 
 <style lang='less' scoped>
 body {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+.info {
+  font-size: 12px;
+  padding-left: 5px;
+  color: #999;
+  > span:nth-of-type(1) {
+    padding-right: 15px;
+  }
+}
+.content {
+  font-size: 14px;
+  padding: 0px 5px;
+  line-height: 24px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .single {
   padding: 15px 0px;
   box-sizing: border-box;
@@ -47,49 +109,58 @@ body {
     flex-direction: column;
     justify-content: space-around;
     overflow: hidden;
-    .content {
-      font-size: 14px;
-      padding: 0px 5px;
-      line-height: 24px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
-  .info {
-    font-size: 12px;
-    padding-left:5px;
-    color: #999;
-    > span:nth-of-type(1) {
-      padding-right: 15px;
-    }
-  }
+
   img {
     width: 120/360 * 100vw;
     height: 70/360 * 100vw;
     object-fit: cover;
     padding-right: 5px;
   }
-  .imgs {
-    display: flex;
-    padding: 10px 0 0 0;
-    > img {
-      flex: 1;
-      padding: 0 5px;
-      box-sizing: border-box;
+}
+.single2 {
+  border-bottom: 1px solid #ccc;
+  padding: 8px 0;
+  .playarea {
+    width: 100%;
+    position: relative;
+    margin-bottom: 10px;
+    img {
+      width: 100%;
       display: block;
     }
+    .playicon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.4);
+      box-shadow: 0px 0px 15px #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      .van-icon {
+        font-size: 40px;
+        color: #fff;
+        line-height: 60px;
+      }
+    }
   }
-  .video {
+}
+.single3 {
+  width: 100vw;
+  .imgs {
     width: 100%;
-    height: 170/360 * 100vw;
-    padding: 10px;
-    box-sizing: border-box;
-    > img {
-      width: 100%;
-      height: 100%;
+    display: flex;
+    padding: 10px 0 0 0;
+    img {
+      width: 120/360 * 100vw;
+      height: 70/360 * 100vw;
+      // 让图片自动的调整大小，根据父容器的大小自动调整
+      object-fit: cover;
+      padding-right: 5px;
     }
   }
 }

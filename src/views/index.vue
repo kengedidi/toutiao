@@ -21,7 +21,8 @@
     <!-- ---------标签页，可以手动左右滑动页面切换标签 -->
     <!-- 引用了 vant 的 tabs 和 tab 标签页组件 -->
     <!-- active就代表当前默认选中的标签项：那么我们就应该加载这个选项的新闻数据 -->
-    <van-tabs swipeable v-model="active">
+    <!-- sticky vant的粘性布局  sticky-->
+    <van-tabs swipeable sticky v-model="active"  >
       <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <!-- :key="value.id+:key="item.id" 唯一标示 加了vscode编辑器就不会有波浪线报错，对业务没有作用 -->
       <van-tab v-for="value in catelist" :title="value.name" :key="value.id">
