@@ -26,20 +26,26 @@
       <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <!-- :key="value.id+:key="item.id" 唯一标示 加了vscode编辑器就不会有波浪线报错，对业务没有作用 -->
       <van-tab v-for="value in catelist" :title="value.name" :key="value.id">
+        <!-- 上拉页面 -- 加载第二页-->
+        <!-- immediate-chec: 是否在初始化时立即执行滚动位置检查 ,当一打开页面，list组件会默认帮我们加载第一页，所以我们不需要自动帮我们加载，我们自己加载第一页，所以fasle关闭自动帮我们加载-->
+        <!-- offset : 滚动条与底部距离小于 offset 时触发load事件 不设置默认是：300像素 -->
         <van-list
           v-model="value.loading"
           :finished="value.finished"
           finished-text="没有更多了"
           @load="onLoad"
-          :offset='20'
-          :immediate-check='false'
+          offset="20"
+          :immediate-check="false"
         >
-          <!-- 生成这个栏目的新闻列表 -->
-          <articleBlock
-            v-for="item in value.postlist"
-            :post="item"
-            :key="item.id"
-          ></articleBlock>
+          <!-- 下拉页面 -- 刷新页面 -->
+          <van-pull-refresh v-model="value.isLoading" @refresh="onRefresh">
+            <!-- 生成这个栏目的新闻列表 -->
+            <articleBlock
+              v-for="item in value.postlist"
+              :post="item"
+              :key="item.id"
+            ></articleBlock>
+          </van-pull-refresh>
         </van-list>
       </van-tab>
     </van-tabs>
@@ -83,6 +89,7 @@ export default {
         pageSize: 4, // 当前栏目每页显示的数量
         loading: false, // 当前栏目的上拉加载的状态，为true说明下在加载中
         finished: false, //当前栏目数据是否全部加载完毕，为true说明没有更多数据了
+        isLoading: false, // 当前栏目的下拉刷新的状态，true表示正在下拉刷新，刷新完成后要将这个重置为false
       };
     });
 
@@ -113,31 +120,46 @@ export default {
         pageIndex: this.catelist[this.active].pageIndex, // 获取当前栏目中的页码
         pageSize: this.catelist[this.active].pageSize, // 获取当前栏目中的每页显示的数量
       });
-      console.log(list.data.data);  
+      console.log(list.data.data);
       // ----------实现栏目数据的动态渲染
       // this.postlist = list.data.data;  //原来未对数据进行改造的
       // 将获取数据存储到当前栏目的postlist数组中
       // 将获取数据存储（追加!!!）到当前栏目的postlist数组中
-      this.catelist[this.active].postlist.push(...list.data.data)
+      this.catelist[this.active].postlist.push(...list.data.data);
       console.log(this.catelist);
+      // ----------------------上拉加载第二页：
       // 本次加载结束，将loading重置为False,以便下次上拉
-      this.catelist[this.active].loading = false
-       // 如果没有数据了，就将finished重置为true
-       if(list.data.data.length < this.catelist[this.active].pageSize){
-         this.catelist[this.active].finished = true;
-       }
+      this.catelist[this.active].loading = false;
+      // 如果没有数据了，就将finished重置为true
+      if (list.data.data.length < this.catelist[this.active].pageSize) {
+        this.catelist[this.active].finished = true;
+      }
+      // ----------------------下拉刷新页面：
+      // 重置下拉刷新的状态
+      this.catelist[this.active].isLoading = false;
     },
-    // 用户上拉页面触发。
-    onLoad(){
-      console.log('触发了加载下一页');
+    // 用户上拉页面--加载第二页触发。
+    onLoad() {
+      console.log("触发了加载下一页");
       // 修改当前栏目的页码值
       this.catelist[this.active].pageIndex++;
       // 为了看到效果而添加的延迟
       setTimeout(() => {
         // 加载下一页
-        this.init()
+        this.init();
       }, 1500);
-    }
+    },
+    // 用户下拉页面--刷新页面触发。
+    onRefresh() {
+      console.log("触发了刷新页面");
+      this.catelist[this.active].postlist.length = 0; // 清空数据
+      this.catelist[this.active].pageIndex = 1; // 重置页码到1
+      // 不管之前是否还有数据，将可能被重置的finished重置为false
+      this.catelist[this.active].finished = false;
+      setTimeout(() => {
+        this.init();
+      }, 1000);
+    },
   },
 };
 </script>
