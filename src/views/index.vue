@@ -22,8 +22,10 @@
     <!-- 引用了 vant 的 tabs 和 tab 标签页组件 -->
     <!-- active就代表当前默认选中的标签项：那么我们就应该加载这个选项的新闻数据 -->
     <van-tabs swipeable v-model="active">
+      <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <van-tab v-for="(value, index) in catelist" :title="value.name">
-        <div style="height: 300px; background: #ccc">内容 {{ index }}</div>
+        <!-- 生成这个栏目的新闻列表 -->
+          <articleBlock v-for="item in value.postlist" :post='item'></articleBlock>
       </van-tab>
     </van-tabs>
   </div>
@@ -32,7 +34,12 @@
 <script>
 import { getCateList } from "@/apis/category.js";
 import { getPostList } from "@/apis/post.js";
+// 引入封装好的文章块
+import articleBlock from '@/components/articleBlock.vue'
 export default {
+  components: {
+    articleBlock
+  },
   data() {
     return {
       //栏目数据
@@ -52,6 +59,7 @@ export default {
 
     //--------------------------
     // 数据改造:每个栏目有属于自己的新闻数据,且能找到的操作互不干扰,当前栏目数据结构不能满足这个需求
+    // map:可以对数组进行遍历，执行回函数，将回调函数的返回值存储到内部创建的数组，最终将数组返回
     this.catelist = this.catelist.map((value) => {
       return {
         ...value,

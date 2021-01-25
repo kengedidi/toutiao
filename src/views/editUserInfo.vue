@@ -229,7 +229,7 @@ export default {
         done();
       }
     },
-    // ----------修改性别
+    // ----------修改性别  -- 弹出框组件
     // async updateGender() {
     //   let res = await updateUserInfo(this.current.id, {
     //     gender: this.editvalue.gender,
@@ -246,7 +246,7 @@ export default {
     //   this.editvalue.gender = index;
     // },
 
-    // ------------ 面板组件 -- 修改性别
+    // ------------修改性别 -- 面板组件
     async onSelect(item) {
       // console.log(item); // 获取到用户选择了男还是女
       let mygender = "";
