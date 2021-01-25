@@ -22,7 +22,7 @@
     <!-- 引用了 vant 的 tabs 和 tab 标签页组件 -->
     <!-- active就代表当前默认选中的标签项：那么我们就应该加载这个选项的新闻数据 -->
     <!-- sticky vant的粘性布局  sticky-->
-    <van-tabs swipeable sticky v-model="active"  >
+    <van-tabs swipeable sticky v-model="active">
       <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <!-- :key="value.id+:key="item.id" 唯一标示 加了vscode编辑器就不会有波浪线报错，对业务没有作用 -->
       <van-tab v-for="value in catelist" :title="value.name" :key="value.id">
@@ -69,7 +69,9 @@ export default {
     this.catelist = this.catelist.map((value) => {
       return {
         ...value,
-        postlist: [],// 添加了存储这个栏目新闻数据的数组
+        postlist: [], // 添加了存储这个栏目新闻数据的数组
+        pageIndex: 1, // 当前栏目的页码
+        pageSize: 4, // 当前栏目每页显示的数量
       };
     });
 
@@ -85,7 +87,7 @@ export default {
       //  console.log(this.catelist[this.active].id); //栏目的id
       let id = this.catelist[this.active].id; //栏目的id
       // 监听用户切换栏目的时候，触发。然后判断postlist数组的长度是否为0，如果为0，也就是之前没有加载过，则发送后台请求 加载当前栏目的数据。 如果postlist数组的长度不是为0，也就是之前加载过了，就未必要再重新加载了，这样可以避免切换栏目每次都是第一页。
-      if(this.catelist[this.active].postlist.length == 0){
+      if (this.catelist[this.active].postlist.length == 0) {
         this.init();
       }
     },
@@ -94,10 +96,14 @@ export default {
     // 封装函数方法（就避免代码重复写）
     async init() {
       //--------------------------
-      // 根据栏目ID获取对应栏目的文章数据
-      let list = await getPostList(this.catelist[this.active].id);
+      // ----------根据栏目ID获取对应栏目的文章数据
+      let list = await getPostList({
+        category:this.catelist[this.active].id, // 获取当前栏目ID
+        pageIndex:this.catelist[this.active].pageIndex, // 获取当前栏目中的页码
+        pageSize:this.catelist[this.active].pageSize// 获取当前栏目中的每页显示的数量
+      });
       // console.log(list);
-      // 实现栏目数据的动态渲染
+      // ----------实现栏目数据的动态渲染
       // this.postlist = list.data.data;  //原来未对数据进行改造的
       // 将获取数据存储到当前栏目的postlist数组中
       this.catelist[this.active].postlist = list.data.data;
