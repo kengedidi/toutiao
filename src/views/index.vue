@@ -26,12 +26,21 @@
       <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <!-- :key="value.id+:key="item.id" 唯一标示 加了vscode编辑器就不会有波浪线报错，对业务没有作用 -->
       <van-tab v-for="value in catelist" :title="value.name" :key="value.id">
-        <!-- 生成这个栏目的新闻列表 -->
-        <articleBlock
-          v-for="item in value.postlist"
-          :post="item"
-          :key="item.id"
-        ></articleBlock>
+        <van-list
+          v-model="value.loading"
+          :finished="value.finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+          :offset='20'
+          :immediate-check='false'
+        >
+          <!-- 生成这个栏目的新闻列表 -->
+          <articleBlock
+            v-for="item in value.postlist"
+            :post="item"
+            :key="item.id"
+          ></articleBlock>
+        </van-list>
       </van-tab>
     </van-tabs>
   </div>
@@ -72,6 +81,8 @@ export default {
         postlist: [], // 添加了存储这个栏目新闻数据的数组
         pageIndex: 1, // 当前栏目的页码
         pageSize: 4, // 当前栏目每页显示的数量
+        loading: false, // 当前栏目的上拉加载的状态，为true说明下在加载中
+        finished: false, //当前栏目数据是否全部加载完毕，为true说明没有更多数据了
       };
     });
 
@@ -98,17 +109,35 @@ export default {
       //--------------------------
       // ----------根据栏目ID获取对应栏目的文章数据
       let list = await getPostList({
-        category:this.catelist[this.active].id, // 获取当前栏目ID
-        pageIndex:this.catelist[this.active].pageIndex, // 获取当前栏目中的页码
-        pageSize:this.catelist[this.active].pageSize// 获取当前栏目中的每页显示的数量
+        category: this.catelist[this.active].id, // 获取当前栏目ID
+        pageIndex: this.catelist[this.active].pageIndex, // 获取当前栏目中的页码
+        pageSize: this.catelist[this.active].pageSize, // 获取当前栏目中的每页显示的数量
       });
-      // console.log(list);
+      console.log(list.data.data);  
       // ----------实现栏目数据的动态渲染
       // this.postlist = list.data.data;  //原来未对数据进行改造的
       // 将获取数据存储到当前栏目的postlist数组中
-      this.catelist[this.active].postlist = list.data.data;
+      // 将获取数据存储（追加!!!）到当前栏目的postlist数组中
+      this.catelist[this.active].postlist.push(...list.data.data)
       console.log(this.catelist);
+      // 本次加载结束，将loading重置为False,以便下次上拉
+      this.catelist[this.active].loading = false
+       // 如果没有数据了，就将finished重置为true
+       if(list.data.data.length < this.catelist[this.active].pageSize){
+         this.catelist[this.active].finished = true;
+       }
     },
+    // 用户上拉页面触发。
+    onLoad(){
+      console.log('触发了加载下一页');
+      // 修改当前栏目的页码值
+      this.catelist[this.active].pageIndex++;
+      // 为了看到效果而添加的延迟
+      setTimeout(() => {
+        // 加载下一页
+        this.init()
+      }, 1500);
+    }
   },
 };
 </script>
