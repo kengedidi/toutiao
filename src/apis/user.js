@@ -41,3 +41,10 @@ export const updateUserInfo = function (id,data){
       data
    })
 }
+
+//文章详情 (根据文章id获取文章详情)
+export const getPostById = function (id){
+  return axios({
+    url:'/post/' + id
+  })
+}
