@@ -76,7 +76,7 @@ export default {
         //  --正则验证正确，符合正则，然后就再发送后台请求数据
           try{
               let res = await userlogin(this.user);
-              // console.log(res);
+              console.log(res);
               
               if(res.status == 200){
                  // 后台请求数据--登陆成功：
@@ -85,7 +85,25 @@ export default {
                 localStorage.setItem('toutiao_59_token',res.data.data.token);
                 // 登陆成功，将密码存储到本地存储当中（这样做虽然不安全，但是以后公司会加密？）
                 localStorage.setItem('toutiao_59_password',res.config.data);
-                this.$router.push({path:'personal/' + res.data.data.user.id})
+             
+
+                //---------文章详情页跳转到登陆页之后的页面回跳
+                // 获取地址
+                let redirecturl = location.href.split('=')[1];
+                // 解码：decodeURIComponent()
+                redirecturl = decodeURIComponent(redirecturl)
+                console.log(redirecturl);
+                // 如果redirecturl2 有值，并且不等于undefined undefined是字符串 一定要加引号
+                // 为什么要加redirecturl2 !== 'undefined' ： 是因为用户不是从其他页面跳转过来回跳，而且直接正常登陆，那么地址是没有参数的，所以redirecturl2是undefined,undefined是true就会走if第一个，则就跳去首页了，我们是要正常登陆后跳转到个人中心页面
+                if(redirecturl && redirecturl !== 'undefined'){
+                  // 回跳
+                      location.href = redirecturl  //第一种方式
+                      //  this.$router.push({ path: redirecturl })  //第二种方式
+                }else{
+                  // 正常登陆 -- 跳转到个人中心页面
+                  this.$router.push({path:'personal/' + res.data.data.user.id})
+                }
+
               }
           }
           catch{

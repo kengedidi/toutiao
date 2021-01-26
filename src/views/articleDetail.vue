@@ -86,7 +86,7 @@ export default {
   },
   // 注册过滤器
   filters: {
-    singledateFormat,
+    singledateFormat, 
   },
   methods: {
     // 点击关注按钮触发

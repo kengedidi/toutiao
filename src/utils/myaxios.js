@@ -31,13 +31,21 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   //console.dir() 打印对象
   console.dir(error);
-  // 对响应错误做点什么:
+  // 对响应错误做点什么:  
    //只有是token相关的错误，才会进行重定向
   if(error.response.data.message == '用户信息验证失败'){
       Toast.fail('用户信息验证失败,请重新登陆')
+
       // 重定向到登陆页
+    console.log('href:', location.href);
+    console.log('hash:', location.hash.substr(1));
       // 重点细节：to会被解析为锚链接：#/url
-      window.location.href = '#/login'
+      window.location.href = '#/login?redirecturl=' + location.href; 
+      //第一种方式 对应：登陆页面操作：location.href = redirecturl
+      
+      // window.location.href = '#/login?redirecturl=' + location.hash.substr(1); 
+      //第二种方式 对应：登陆页面操作： this.$router.push({ path: redirecturl })
+    
   }else{
     Toast.fail(error.response.data.message)
   }
