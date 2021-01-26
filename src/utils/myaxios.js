@@ -1,6 +1,6 @@
 // 此文件封装axios
 import axios from 'axios'
-
+import {Toast} from 'vant'
 // 配置基准路径,基准路径最终会拼接到url前面
 axios.defaults.baseURL = 'http://localhost:3000'
 
@@ -23,6 +23,26 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
+
+// 添加响应拦截器,所有响应都会经过这个响应拦截器
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  return response;
+}, function (error) {
+  //console.dir() 打印对象
+  console.dir(error);
+  // 对响应错误做点什么:
+   //只有是token相关的错误，才会进行重定向
+  if(error.response.data.message == '用户信息验证失败'){
+      Toast.fail('用户信息验证失败,请重新登陆')
+      // 重定向到登陆页
+      // 重点细节：to会被解析为锚链接：#/url
+      window.location.href = '#/login'
+  }else{
+    Toast.fail(error.response.data.message)
+  }
+  return Promise.reject(error);
+});
 
 //暴露
 export default axios

@@ -34,17 +34,33 @@ export const getUserInfo = function (id) {
 
 //编辑用户信息
 //文档说明用户编辑 要传id和需要修改的数据
-export const updateUserInfo = function (id,data){
-   return axios ({
-      method:'post',
-      url:`/user_update/${id}`,
-      data
-   })
+export const updateUserInfo = function (id, data) {
+  return axios({
+    method: 'post',
+    url: `/user_update/${id}`,
+    data
+  })
 }
 
 //文章详情 (根据文章id获取文章详情)
-export const getPostById = function (id){
+export const getPostById = function (id) {
   return axios({
-    url:'/post/' + id
+    url: '/post/' + id
+  })
+}
+
+
+// 关注用户
+export const followUser = function (id) {
+  return axios({
+    // get
+    url: '/user_follows/' + id
+  })
+}
+// 取消关注用户
+export const unfollowUser = function (id) {
+  return axios({
+    // get
+    url: '/user_unfollow/' + id
   })
 }

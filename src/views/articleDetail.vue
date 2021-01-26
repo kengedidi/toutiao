@@ -3,34 +3,44 @@
     <!-- 文章顶部标题 -->
     <div class="header">
       <div class="left">
+        <!--  @click="$router.back() 返回上一层 -->
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
-      <span :class="{active:post.has_follow}">{{post.has_follow ? '已关注' : '关注'}}</span>
+      <span :class="{ active: post.has_follow }" @click="ClickFollowUser">{{
+        post.has_follow ? "已关注" : "关注"
+      }}</span>
     </div>
     <!-- 文章内容 -->
     <div class="detail">
-      <div class="title">{{post.title}}</div>
+      <div class="title">{{ post.title }}</div>
       <div class="desc">
-         <!-- 访问对象的不存在的属性>>undefined -->
+        <!-- 访问对象的不存在的属性>>undefined -->
         <!-- 这里使用短路运算符 ，只要第一个post.user为ture有值了才会往后面走post.user.nickname ，所以一开页面已经解析完了，后台数据还没回来，所以如果只写post.user.nickname 系统会报错，因为undefined不会报错，但是如果是undefined.它的成员就会报错 ，所以避免报错 ，加了&& -->
-        <span>{{post.user && post.user.nickname}}</span> &nbsp;&nbsp;
+        <span>{{ post.user && post.user.nickname }}</span> &nbsp;&nbsp;
         <!-- 使用过滤器 | 管道符 -->
-        <span>{{post.create_date | singledateFormat}}</span>
+        <span>{{ post.create_date | singledateFormat }}</span>
       </div>
       <!-- 要使用v-html 否则解析不了标签  img图片在这里结构里面-->
       <!-- 图片文章 -->
-      <div class="content" v-html="post.content" v-if="post.type == 1" ></div>
+      <div class="content" v-html="post.content" v-if="post.type == 1"></div>
       <!-- 视频文章 -->
-       <!-- 播放器的基本属性配置 
+      <!-- 播放器的基本属性配置 
       controls:是否显示播放器控制面板，如果没有控制面板，则播放器不可见
       src:视频文件的路径
       poster:设置第一帧的画面--封面
       autoplay:自动播放，谷歌不支持
       loop:循环播放-->
-        <video :src="axios.defaults.baseURL + post.content" controls v-if="post.type == 2" style="width:100%"></video>
+      <video
+        :src="axios.defaults.baseURL + post.content"
+        controls
+        v-if="post.type == 2"
+        style="width: 100%"
+      ></video>
       <div class="opt">
-        <span class="like"> <van-icon name="good-job-o" />{{post.comment_length}} </span>
+        <span class="like">
+          <van-icon name="good-job-o" />{{ post.comment_length }}
+        </span>
         <span class="chat"> <van-icon name="chat" class="w" />微信 </span>
       </div>
     </div>
@@ -54,30 +64,55 @@
 </template>
 <script>
 // 引入封装获取文章详情api
-import {getPostById} from '@/apis/user.js'
+import { getPostById, followUser, unfollowUser } from "@/apis/user.js";
 // 引入封装的过滤器（时间格式化）
-import {singledateFormat} from '@/utils/myfilters.js'
-import axios from '@/utils/myaxios.js'
+import { singledateFormat } from "@/utils/myfilters.js";
+import axios from "@/utils/myaxios.js";
 export default {
-  data () {
+  data() {
     return {
-      post:{},
+      post: {},
       // 把axios赋值到我定义的当前实例成员，变成当前实例的成员
-      axios
-    }
+      axios,
+    };
   },
- async mounted () {
+  async mounted() {
     // 获取文章id
     let id = this.$route.params.id;
     console.log(id);
-    let res = await getPostById(id)
-    this.post = res.data.data
-        console.log(this.post);
+    let res = await getPostById(id);
+    this.post = res.data.data;
+    console.log(this.post);
   },
-  // 注册过滤器 
+  // 注册过滤器
   filters: {
-    singledateFormat
-  }
+    singledateFormat,
+  },
+  methods: {
+    // 点击关注按钮触发
+    async ClickFollowUser() {
+      try {
+        let id = this.post.id;
+        let res;
+        if (this.post.has_follow) {
+          // true:说明已关注,则取消关注：
+          res = await unfollowUser(id);
+          console.log(res);
+        } else {
+          // false:说明未关注,则要关注：
+          res = await followUser(id);
+          console.log(res);
+        }
+
+        if (res.status == 200) {
+          // 实现页面刷新
+          this.post.has_follow = !this.post.has_follow;
+          //  提示用户
+          this.$toast.success(res.data.message);
+        }
+      } catch (err) {}
+    },
+  },
 };
 </script>
 
@@ -111,12 +146,12 @@ export default {
     border-radius: 15px;
     font-size: 13px;
   }
-     //关注后 改变样式
-    .active{
-      border:1px solid #cccccc;
-      background-color:transparent;
-      color:#333
-    }
+  //关注后 改变样式
+  .active {
+    border: 1px solid #cccccc;
+    background-color: transparent;
+    color: #333;
+  }
 }
 .detail {
   padding: 15px;
@@ -137,9 +172,9 @@ export default {
     padding-bottom: 30px;
     width: 100%;
     // 深度样式，父组件
-   /deep/ img{
+    /deep/ img {
       width: 100%;
-     display:block;
+      display: block;
     }
   }
 }
