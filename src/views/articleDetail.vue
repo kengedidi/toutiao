@@ -19,7 +19,16 @@
         <span>{{post.create_date | singledateFormat}}</span>
       </div>
       <!-- 要使用v-html 否则解析不了标签  img图片在这里结构里面-->
-      <div class="content" v-html="post.content"></div>
+      <!-- 图片文章 -->
+      <div class="content" v-html="post.content" v-if="post.type == 1" ></div>
+      <!-- 视频文章 -->
+       <!-- 播放器的基本属性配置 
+      controls:是否显示播放器控制面板，如果没有控制面板，则播放器不可见
+      src:视频文件的路径
+      poster:设置第一帧的画面--封面
+      autoplay:自动播放，谷歌不支持
+      loop:循环播放-->
+        <video :src="axios.defaults.baseURL + post.content" controls v-if="post.type == 2" style="width:100%"></video>
       <div class="opt">
         <span class="like"> <van-icon name="good-job-o" />{{post.comment_length}} </span>
         <span class="chat"> <van-icon name="chat" class="w" />微信 </span>
@@ -48,10 +57,13 @@
 import {getPostById} from '@/apis/user.js'
 // 引入封装的过滤器（时间格式化）
 import {singledateFormat} from '@/utils/myfilters.js'
+import axios from '@/utils/myaxios.js'
 export default {
   data () {
     return {
-      post:{}
+      post:{},
+      // 把axios赋值到我定义的当前实例成员，变成当前实例的成员
+      axios
     }
   },
  async mounted () {
