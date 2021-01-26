@@ -22,7 +22,7 @@
     <!-- 引用了 vant 的 tabs 和 tab 标签页组件 -->
     <!-- active就代表当前默认选中的标签项：那么我们就应该加载这个选项的新闻数据 -->
     <!-- sticky vant的粘性布局  sticky-->
-    <van-tabs swipeable sticky v-model="active">
+    <van-tabs swipeable v-model="active" animated>
       <!-- 生成栏目列表 --- 遍历栏目所有数据 -遍历数组  -->
       <!-- :key="value.id+:key="item.id" 唯一标示 加了vscode编辑器就不会有波浪线报错，对业务没有作用 -->
       <van-tab v-for="value in catelist" :title="value.name" :key="value.id">
@@ -40,6 +40,7 @@
           <!-- 下拉页面 -- 刷新页面 -->
           <van-pull-refresh v-model="value.isLoading" @refresh="onRefresh">
             <!-- 生成这个栏目的新闻列表 -->
+            <!--  :post="item" 把数据传过去子组件 -->
             <articleBlock
               v-for="item in value.postlist"
               :post="item"
@@ -55,8 +56,7 @@
 <script>
 import { getCateList } from "@/apis/category.js";
 import { getPostList } from "@/apis/post.js";
-// 引入封装好的文章块
-import articleBlock from "@/components/articleBlock.vue";
+import articleBlock from "@/components/articleBlock.vue";// 引入封装好的文章块
 export default {
   components: {
     articleBlock,
@@ -75,9 +75,7 @@ export default {
     // 当页面加载完之后加载 栏目的数据
     let res = await getCateList();
     // console.log(res); //获取到栏目的所有数据
-    this.catelist = res.data.data;
-    // console.log(this.catelist);
-
+    this.catelist = res.data.data;     // console.log(this.catelist);
     //--------------------------
     // 数据改造:每个栏目有属于自己的新闻数据,且能找到的操作互不干扰,当前栏目数据结构不能满足这个需求
     // map:可以对数组进行遍历，执行回函数，将回调函数的返回值存储到内部创建的数组，最终将数组返回
@@ -89,15 +87,13 @@ export default {
         pageSize: 4, // 当前栏目每页显示的数量
         loading: false, // 当前栏目的上拉加载的状态，为true说明下在加载中
         finished: false, //当前栏目数据是否全部加载完毕，为true说明没有更多数据了
-        isLoading: false, // 当前栏目的下拉刷新的状态，true表示正在下拉刷新，刷新完成后要将这个重置为false
-      };
-    });
-
+        isLoading: false, // 当前栏目的下拉刷新的状态，true表示正在下拉刷新，刷新完成后要将这个重置为false 
+    }});
     //页面一打开就加载当前栏目对应文章数据（栏目已经设置如果登陆过就下标1，没登陆下标就0 ，页面一开始显示头条栏目的文章）
     this.init();
   },
   watch: {
-    // 监听栏目
+    // 监听栏目---切换时触发
     active() {
       console.log("触发了");
       //  console.log(this.active); //栏目的索引
@@ -110,7 +106,7 @@ export default {
       }
     },
   },
-  methods: {
+  methods: {  
     // 封装函数方法（就避免代码重复写）
     async init() {
       //--------------------------
@@ -120,7 +116,7 @@ export default {
         pageIndex: this.catelist[this.active].pageIndex, // 获取当前栏目中的页码
         pageSize: this.catelist[this.active].pageSize, // 获取当前栏目中的每页显示的数量
       });
-      console.log(list.data.data);
+      // console.log(list.data.data);
       // ----------实现栏目数据的动态渲染
       // this.postlist = list.data.data;  //原来未对数据进行改造的
       // 将获取数据存储到当前栏目的postlist数组中
@@ -143,11 +139,11 @@ export default {
       console.log("触发了加载下一页");
       // 修改当前栏目的页码值
       this.catelist[this.active].pageIndex++;
-      // 为了看到效果而添加的延迟
-      setTimeout(() => {
+      // ！！！！！！！！！为了看到效果而添加的延迟，真实开发，越块加载数据越好
+      // setTimeout(() => {
         // 加载下一页
         this.init();
-      }, 1500);
+      // }, 1500);
     },
     // 用户下拉页面--刷新页面触发。
     onRefresh() {
@@ -156,9 +152,10 @@ export default {
       this.catelist[this.active].pageIndex = 1; // 重置页码到1
       // 不管之前是否还有数据，将可能被重置的finished重置为false
       this.catelist[this.active].finished = false;
-      setTimeout(() => {
+       // ！！！！！！！！！为了看到效果而添加的延迟，真实开发，越块加载数据越好
+      // setTimeout(() => {
         this.init();
-      }, 1000);
+      // }, 1000);
     },
   },
 };

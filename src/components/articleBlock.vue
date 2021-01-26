@@ -14,7 +14,7 @@
     </div>
     <img :src="axios.defaults.baseURL + post.cover[0].url" alt />
   </div>
-
+  <!-- ----------------- -->
   <div
     class="single2"
     v-else-if="post.type === 2"
@@ -32,7 +32,7 @@
       <span>{{ post.comment_length }}跟帖</span>
     </p>
   </div>
-
+  <!-- ----------------- -->
   <div
     class="single3"
     v-else-if="post.type === 1 && post.cover.length >= 3"
@@ -53,7 +53,6 @@
     </p>
   </div>
 </template>
-
 <script>
 import axios from "@/utils/myaxios.js";
 export default {
@@ -70,8 +69,6 @@ export default {
   },
 };
 </script>
-
-
 <style lang='less' scoped>
 body {
   overflow-x: hidden;
@@ -95,7 +92,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .single {
   padding: 15px 0px;
   box-sizing: border-box;
@@ -110,7 +106,6 @@ body {
     justify-content: space-around;
     overflow: hidden;
   }
-
   img {
     width: 120/360 * 100vw;
     height: 70/360 * 100vw;

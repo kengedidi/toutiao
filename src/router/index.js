@@ -21,31 +21,36 @@ const router = new VueRouter({
       path: '/index',
       component: () => import('@/views/index.vue')
     },
-    // 登陆
+    // 登陆页面
     {
       name: 'login',
       path: '/login',
       component: () => import('@/views/login.vue')
     },
-    // 注册
+    // 注册页面
     {
       name: 'register',
       path: '/register',
       component: () => import('@/views/register.vue')
     },
-    // 个人中心
+    // 个人中心页面
     {
       name: 'personal',
       path: '/personal/:id',
       component: () => import('@/views/personal.vue')
     },
-    //编辑用户信息
+    //编辑用户信息页面
     {
       name: 'editUserInfo',
       path: '/editUserInfo/:id',
       component: () => import('@/views/editUserInfo.vue')
     },
-    
+     //文章详情页面
+     {
+      name: 'articleDetail',
+      path: '/articleDetail/:id',
+      component: () => import('@/views/articleDetail.vue')
+    },
   ]
 })
 // 
