@@ -4,10 +4,10 @@
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
       <span class="comment">
         <i class="iconfont iconpinglun-"></i>
-        <em></em>
+        <em>{{article.comment_length}}</em>
       </span>
       <!-- 文章收藏 -->
-      <i class="iconfont iconshoucang"></i>
+      <i class="iconfont iconshoucang" :class="{artivleClass:article.has_star}" @click="starArticle"></i>
       <i class="iconfont iconfenxiang"></i>
     </div>
     <!-- 一级 评论 -->
@@ -22,9 +22,10 @@
 </template>
 
 <script>
+import {starThisArticle} from '@/apis/post.js'
 export default {
   props: {
-    aditve:{
+    article:{
       type:Object,  //类型对象
       required:true //必须传值
     }
@@ -36,8 +37,18 @@ export default {
     };
   },
   methods: {
+    // 点击取消评论 和 点击评论聚焦触发----显示与隐藏评论块
+     // 获取焦点时触发
     handlerFocus(){
       this.isFocus = !this.isFocus
+    },
+    // 收藏
+   async starArticle(){
+      // console.log(this.article);
+      let res = await starThisArticle(this.article.id)
+      console.log(res);
+      this.$toast.success(res.data.message)
+      this.article.has_star = !this.article.has_star 
     }
   },
 };
@@ -123,6 +134,9 @@ export default {
   }
   > i {
     flex: 1;
+  }
+  .artivleClass{
+   color:red;
   }
 }
 </style>

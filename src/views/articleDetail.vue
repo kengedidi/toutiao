@@ -68,7 +68,7 @@
       <div class="more">更多跟帖</div>
     </div>
       <!-- 底部评论块 -->
-    <commentFooter :aditve="post"></commentFooter>
+    <commentFooter :article="post"></commentFooter>
   </div>
 </template>
 <script>
