@@ -7,6 +7,7 @@
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
+      <!-- -----------------关注 -->
       <span :class="{ active: post.has_follow }" @click="ClickFollowUser">{{
         post.has_follow ? "已关注" : "关注"
       }}</span>
@@ -18,13 +19,13 @@
         <!-- 访问对象的不存在的属性>>undefined -->
         <!-- 这里使用短路运算符 ，只要第一个post.user为ture有值了才会往后面走post.user.nickname ，所以一开页面已经解析完了，后台数据还没回来，所以如果只写post.user.nickname 系统会报错，因为undefined不会报错，但是如果是undefined.它的成员就会报错 ，所以避免报错 ，加了&& -->
         <span>{{ post.user && post.user.nickname }}</span> &nbsp;&nbsp;
-        <!-- 使用过滤器 | 管道符 -->
+        <!-- ---------------使用过滤器 | 管道符 -->
         <span>{{ post.create_date | singledateFormat }}</span>
       </div>
       <!-- 要使用v-html 否则解析不了标签  img图片在这里结构里面-->
-      <!-- 图片文章 -->
+      <!-- ----------------图片文章 -->
       <div class="content" v-html="post.content" v-if="post.type == 1"></div>
-      <!-- 视频文章 -->
+      <!-- ----------------视频文章 -->
       <!-- 播放器的基本属性配置 
       controls:是否显示播放器控制面板，如果没有控制面板，则播放器不可见
       src:视频文件的路径
@@ -37,6 +38,7 @@
         v-if="post.type == 2"
         style="width: 100%"
       ></video>
+      <!-- -----------------点赞 -->
       <div class="opt"> 
         <span
           class="like"
@@ -65,6 +67,8 @@
       </div>
       <div class="more">更多跟帖</div>
     </div>
+      <!-- 底部评论块 -->
+    <commentFooter :aditve="post"></commentFooter>
   </div>
 </template>
 <script>
@@ -73,12 +77,16 @@ import {
   getPostById,
   followUser,
   unfollowUser,
-  likeThisArticle,
 } from "@/apis/user.js";
+import {likeThisArticle} from '@/apis/post.js'
 // 引入封装的过滤器（时间格式化）
 import { singledateFormat } from "@/utils/myfilters.js";
 import axios from "@/utils/myaxios.js";
+import commentFooter from '@/components/commentFooter.vue'
 export default {
+  components: {
+    commentFooter
+  },
   data() {
     return {
       post: {},
