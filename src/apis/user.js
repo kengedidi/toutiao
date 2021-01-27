@@ -64,11 +64,18 @@ export const unfollowUser = function (id) {
     url: '/user_unfollow/' + id
   })
 }
-
-//我的关注
+ 
+//我的关注 （获取当前用户的关注列表）
 export const getUserFollows = function () {
   return axios({
     // get
     url: '/user_follows'
+  })
+}
+
+// 我的收藏（获取当前用户的收藏列表）
+export const getUserStars = function(){
+  return axios({
+    url:'/user_star'
   })
 }

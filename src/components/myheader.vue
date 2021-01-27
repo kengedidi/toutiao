@@ -3,11 +3,11 @@
   <div class="header">
     <!-- 具名插槽，可以为插槽设置名称，后期可以将内容放置到指定名称的插槽中 -->
     <div>
-      <slot name="left">left</slot>
+      <slot name="left"></slot>
     </div>
     <div>{{ title }}</div>
     <div>
-      <slot name="right">right</slot>
+      <slot name="right"></slot>
     </div>
   </div>
 </template>

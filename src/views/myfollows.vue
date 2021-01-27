@@ -1,4 +1,5 @@
 <template>
+<!-- 个人中心的-我的关注页面 -->
   <div class="focus">
       <myheader title='我的关注'>
           <span slot="left" class="iconfont iconjiantou2" @click="$router.back()"></span>
@@ -9,7 +10,7 @@
               <div class="center">
                   <p>{{item.nickname}}</p>
                   <!-- 使用过滤器 -->
-                  <span>{{item.create_date | singledateFormat}}</span>
+                  <span>{{item.create_date | singledateFormat('-')}}</span>
               </div>
               <span @click="cancelFollowUser(index,item.id)">取消关注</span>
           </div>
@@ -18,8 +19,11 @@
 </template>
 
 <script>
+//引入封装的api
 import {getUserFollows,unfollowUser} from '@/apis/user.js'
+//引入封装的头部
 import myheader from '@/components/myheader.vue'
+//引入封装好的axios
 import axios from '@/utils/myaxios.js'
 // 引入过滤器
 import {singledateFormat} from '@/utils/myfilters.js'
@@ -37,7 +41,7 @@ export default {
   filters: {
     singledateFormat
   },
- async mounted () {
+ async mounted() {
    let res = await getUserFollows();
   this.followList = res.data.data.map((v)=>{
       v.head_img = axios.defaults.baseURL +  v.head_img
@@ -52,7 +56,7 @@ export default {
       console.log(res);
       // 提示用户
       this.$toast.success(res.data.message)
-      //页面的刷新
+      //页面的刷新 ，删除数组中的成员
       this.followList.splice(index,1)
     }
   }

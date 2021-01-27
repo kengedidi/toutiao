@@ -30,3 +30,4 @@ export const starThisArticle = function (id) {
     url: '/post_star/' + id
   })
 }
+

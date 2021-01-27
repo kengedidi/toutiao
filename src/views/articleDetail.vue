@@ -1,4 +1,5 @@
 <template>
+<!-- 文章详情页面 -->
   <div class="articaldetail">
     <!-- 文章顶部标题 -->
     <div class="header">
@@ -109,7 +110,8 @@ export default {
     // 关注 -- 点击关注按钮触发
     async ClickFollowUser() {
       try {
-        let id = this.post.id;
+        // 传用户ID， 不是传文章ID
+        let id = this.post.user.id;
         let res;
         if (this.post.has_follow) {
           // true:说明已关注,则取消关注：
@@ -121,12 +123,10 @@ export default {
           console.log(res);
         }
 
-        if (res.status == 200) {
           // 实现页面刷新
           this.post.has_follow = !this.post.has_follow;
           //  提示用户
           this.$toast.success(res.data.message);
-        }
       } catch (err) {}
     },
     // 点赞 -- 点击点赞按钮触发
