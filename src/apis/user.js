@@ -64,3 +64,19 @@ export const unfollowUser = function (id) {
     url: '/user_unfollow/' + id
   })
 }
+
+//点赞（文章id）
+export const likeThisArticle = function (id) {
+  return axios({
+    //get
+    url: '/post_like/' + id
+  })
+}
+
+//收藏 （文章id）
+export const starThisArticle = function (id) {
+  return axios({
+    //get
+    url: '/post_star/' + id
+  })
+}

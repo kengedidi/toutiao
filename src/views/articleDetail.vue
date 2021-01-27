@@ -37,9 +37,14 @@
         v-if="post.type == 2"
         style="width: 100%"
       ></video>
-      <div class="opt">
-        <span class="like">
-          <van-icon name="good-job-o" />{{ post.comment_length }}
+      <div class="opt"> 
+        <span
+          class="like"
+          @click="likeArticle"
+          :class="{likeClass : post.has_like}"
+          :key="post.id"
+        >
+          <van-icon class="likevan" name="good-job-o" />{{ post.comment_length || 0}}
         </span>
         <span class="chat"> <van-icon name="chat" class="w" />微信 </span>
       </div>
@@ -64,7 +69,12 @@
 </template>
 <script>
 // 引入封装获取文章详情api
-import { getPostById, followUser, unfollowUser } from "@/apis/user.js";
+import {
+  getPostById,
+  followUser,
+  unfollowUser,
+  likeThisArticle,
+} from "@/apis/user.js";
 // 引入封装的过滤器（时间格式化）
 import { singledateFormat } from "@/utils/myfilters.js";
 import axios from "@/utils/myaxios.js";
@@ -79,17 +89,16 @@ export default {
   async mounted() {
     // 获取文章id
     let id = this.$route.params.id;
-    console.log(id);
     let res = await getPostById(id);
     this.post = res.data.data;
     console.log(this.post);
   },
   // 注册过滤器
   filters: {
-    singledateFormat, 
+    singledateFormat,
   },
   methods: {
-    // 点击关注按钮触发
+    // 关注 -- 点击关注按钮触发
     async ClickFollowUser() {
       try {
         let id = this.post.id;
@@ -111,6 +120,23 @@ export default {
           this.$toast.success(res.data.message);
         }
       } catch (err) {}
+    },
+    // 点赞 -- 点击点赞按钮触发
+    async likeArticle() {
+      let res = await likeThisArticle(this.post.id);
+      console.log(res);
+      // 给出提示
+      this.$toast.success(res.data.message);
+      // 变化数量
+      if (this.post.has_like) {
+        //如果是ture 则已经点赞了，要取消点赞
+        this.post.comment_length--;
+      } else {
+        //如果是false 则未点赞，需要点赞
+        this.post.comment_length++;
+      }
+      //更新页面 --切换页面样式
+      this.post.has_like = !this.post.has_like;
     },
   },
 };
@@ -190,6 +216,11 @@ export default {
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 15px;
+  }
+  //点赞--动态加样式
+  .likeClass {
+    border:1px solid red;
+    color: red;
   }
   .w {
     color: rgb(84, 163, 5);

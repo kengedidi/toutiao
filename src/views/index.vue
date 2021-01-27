@@ -34,7 +34,7 @@
           :finished="value.finished"
           finished-text="没有更多了"
           @load="onLoad"
-          offset="20"
+          :offset="20"
           :immediate-check="false"
         >
           <!-- 下拉页面 -- 刷新页面 -->
