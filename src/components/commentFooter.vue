@@ -47,7 +47,9 @@ export default {
       // console.log(this.article);
       let res = await starThisArticle(this.article.id)
       console.log(res);
+      // 提示用户
       this.$toast.success(res.data.message)
+      //刷新页面
       this.article.has_star = !this.article.has_star 
     }
   },

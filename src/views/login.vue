@@ -84,8 +84,7 @@ export default {
                 // 登陆成功，将token存储到本地存储当中
                 localStorage.setItem('toutiao_59_token',res.data.data.token);
                 // 登陆成功，将密码存储到本地存储当中（这样做虽然不安全，但是以后公司会加密？）
-                localStorage.setItem('toutiao_59_password',res.config.data);
-             
+                localStorage.setItem('toutiao_59_password',JSON.stringify({...this.user,id:res.data.data.user.id}));
 
                 //---------文章详情页跳转到登陆页之后的页面回跳
                 // 获取地址

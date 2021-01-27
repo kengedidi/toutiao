@@ -69,6 +69,7 @@ export default {
       active: localStorage.getItem("toutiao_59_token") ? 1 : 0,
       //栏目对应文章数据
       // postlist: [],
+      id:JSON.parse(localStorage.getItem('toutiao_59_password')) ? JSON.parse(localStorage.getItem('toutiao_59_password')).id : null
     };
   },
   async mounted() {
