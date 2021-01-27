@@ -51,6 +51,12 @@ const router = new VueRouter({
       path: '/articleDetail/:id',
       component: () => import('@/views/articleDetail.vue')
     },
+      //我的关注
+      {
+        name: 'myfollows',
+        path: '/myfollows',
+        component: () => import('@/views/myfollows.vue')
+      },
   ]
 })
 // 
