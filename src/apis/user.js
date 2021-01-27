@@ -64,3 +64,11 @@ export const unfollowUser = function (id) {
     url: '/user_unfollow/' + id
   })
 }
+
+//我的关注
+export const getUserFollows = function () {
+  return axios({
+    // get
+    url: '/user_follows'
+  })
+}
