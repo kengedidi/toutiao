@@ -16,26 +16,26 @@
         <div class="head">
           <img :src="value.user.head_img" alt />
           <div>
-            <p>{{value.user.nickname}}</p>
-            <span>{{value.user.create_date | offsetTimeFormat}}</span>
+            <p>{{ value.user.nickname }}</p>
+            <span>{{ value.user.create_date | offsetTimeFormat }}</span>
           </div>
           <span>回复</span>
         </div>
-          <!-- --------- 二层评论  有问题：因为你永远不知道评论有多少层，所以要封装-->
-         <!-- <div class="commentItem" v-if="value.parent">
+        <!-- --------- 二层评论  有问题：因为你永远不知道评论有多少层，所以要封装-->
+        <!-- <div class="commentItem" v-if="value.parent">
             <div class="top">
               <span class="left">作者:{{value.parent.user.nickname}}  评论时间:{{value.parent.create_date | offsetTimeFormat}}</span>
               <span class="right">回复</span>
             </div>
             <div class="buttom">{{value.parent.content}}</div> -->
-         <!-- </div> -->
-          <!-- ---------- -->
-          <commentltem v-if="value.parent" :parent="value.parent"></commentltem>
-          <!-- ---------- -->
-        <div class="text">{{value.content}}</div>
+        <!-- </div> -->
+        <!-- ---------- -->
+        <commentltem v-if="value.parent" :parent="value.parent"></commentltem>
+        <!-- ---------- -->
+        <div class="text">{{ value.content }}</div>
       </div>
     </div>
-    <commentFooter :article="post"></commentFooter>
+    <commentFooter :article="post" @refreshData="refreshData"></commentFooter>
   </div>
 </template>
 <script>
@@ -62,8 +62,12 @@ export default {
   filters: {
     offsetTimeFormat
   },
-  async mounted() {
-    //获取文章ID
+   mounted() {
+      this.init()
+  },
+  methods: {
+   async init(){
+      //获取文章ID
     let id = this.$route.params.id;
     //调用api方法获取所有评论数据
     let res = await getPostCommentList(id);
@@ -77,18 +81,23 @@ export default {
     // 获取文章ID获取 文章详情
     this.post = (await getPostById(id)).data.data
     console.log(this.post);
-  },
+    },
+    //子组件发表评论后 触发 -- 刷新页面 
+    refreshData(){
+        this.init()
+    }
+  }
 };
 </script>
 
 <style lang='less' scoped>
 .lists {
   // 加样式
-  .commentItem{
+  .commentItem {
     padding: 5px;
     border: 1px solid #ccc;
     margin-top: 5px;
-    .top{
+    .top {
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -98,7 +107,7 @@ export default {
     .buttom {
       padding: 10px 0;
     }
-  };
+  }
   // border-top: 5px solid #ddd;
   padding: 0 15px;
   .item {
@@ -137,7 +146,7 @@ export default {
     }
   }
 }
-.comments{
-  padding-bottom:70px;
+.comments {
+  padding-bottom: 70px;
 }
 </style>

@@ -3,20 +3,27 @@
     <div class="addcomment" v-show="!isFocus">
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
       <!-- 文章评论图标 -->
-      <span class="comment" @click="$router.push({path:'/comment/' + article.id})">
+      <span
+        class="comment"
+        @click="$router.push({ path: '/comment/' + article.id })"
+      >
         <i class="iconfont iconpinglun-"></i>
-        <em>{{article.comment_length}}</em>
+        <em>{{ article.comment_length }}</em>
       </span>
       <!-- 文章收藏 -->
-      <i class="iconfont iconshoucang" :class="{artivleClass:article.has_star}" @click="starArticle"></i>
+      <i
+        class="iconfont iconshoucang"
+        :class="{ artivleClass: article.has_star }"
+        @click="starArticle"
+      ></i>
       <!-- 文章分享 -->
       <i class="iconfont iconfenxiang"></i>
     </div>
     <!-- 一级 评论 -->
     <div class="inputcomment" v-show="isFocus">
-      <textarea ref="commtext" rows="5"></textarea>
+      <textarea ref="commtext" rows="5" v-model="content"></textarea>
       <div>
-        <span>发 送</span>  
+        <span @click="sendComment">发 送</span>
         <span @click="handlerFocus">取 消</span>
       </div>
     </div>
@@ -24,36 +31,54 @@
 </template>
 
 <script>
-import {starThisArticle} from '@/apis/post.js'
+import { starThisArticle } from "@/apis/post.js";
+// 引入发表评论api
+import { publishComment } from "@/apis/post.js";
 export default {
   props: {
-    article:{
-      type:Object,  //类型对象
-      required:true //必须传值
-    }
-  },   
+    article: {
+      type: Object, //类型对象
+      required: true, //必须传值
+    },
+  },
   data() {
     return {
       // 文本输入框是否聚焦
       isFocus: false,
+      content: "",
     };
   },
   methods: {
     // 点击取消评论 和 点击评论聚焦触发----显示与隐藏评论块
-     // 获取焦点时触发
-    handlerFocus(){
-      this.isFocus = !this.isFocus
+    // 获取焦点时触发
+    handlerFocus() {
+      this.isFocus = !this.isFocus;
     },
     // 收藏
-   async starArticle(){
+    async starArticle() {
       console.log(this.article);
-      let res = await starThisArticle(this.article.id)
-      console.log(res);
+      let res = await starThisArticle(this.article.id);
+      // console.log(res);
       // 提示用户
-      this.$toast.success(res.data.message)
+      this.$toast.success(res.data.message);
       //刷新页面
-      this.article.has_star = !this.article.has_star 
-    }
+      this.article.has_star = !this.article.has_star;
+    },
+    // 发表一级评论
+    async sendComment() {
+      if (this.content.trim().length == 0) {
+        this.$toast("请先输入发表的内容");
+        return;
+      }
+      let data = { content: this.content };
+      let res = await publishComment(this.article.id, data);
+      if (res.status == 200) {
+        this.$toast.success(res.data.message); //用户提示
+        this.isFocus = !this.isFocus //隐藏输入框
+        this.content = '';  //输入框清空
+        this.$emit('refreshData')
+      }
+    },
   },
 };
 </script>
@@ -139,8 +164,8 @@ export default {
   > i {
     flex: 1;
   }
-  .artivleClass{
-   color:red;
+  .artivleClass {
+    color: red;
   }
 }
 </style>

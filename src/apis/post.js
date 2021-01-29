@@ -38,3 +38,13 @@ export const getPostCommentList = function (id) {
     url: '/post_comment/' + id
   })
 }
+
+
+//发表一级评论
+export const publishComment = function (id,data) {
+  return axios({
+    method:'post',
+    url: '/post_comment/' + id,
+    data
+  })
+}
