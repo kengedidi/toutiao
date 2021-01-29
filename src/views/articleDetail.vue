@@ -5,7 +5,7 @@
     <div class="header">
       <div class="left">
         <!--  @click="$router.back() 返回上一层 -->
-        <van-icon name="arrow-left back" @click="$router.back()" />
+        <van-icon name="arrow-left back" @click="$router.push({name:'index'})" />
         <span class="iconfont iconnew new"></span>
       </div>
       <!-- -----------------关注 -->

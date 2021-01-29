@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 //明确的安装路由功能
 Vue.use(VueRouter);
 
-
 //创建路由模块 和 添加路由配置
 const router = new VueRouter({
   //使用routes进行路由的配置
@@ -60,11 +59,18 @@ const router = new VueRouter({
       //   keepAlive: false
       // } // false为不缓存
     },
-    //我的收藏
+    //我的收藏comment
     {
       name: 'mystars',
       path: '/mystars',
       component: () => import('@/views/mystars.vue'),
+    },
+    //评论页面 
+    {
+      name: 'comment',
+      path: '/comment',
+      component: () => import('@/views/comment.vue'),
+      // meta: { keepAlive: false } // false为不缓存
     },
   ]
 })

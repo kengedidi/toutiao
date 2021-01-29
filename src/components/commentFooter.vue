@@ -2,12 +2,14 @@
   <div class="comment">
     <div class="addcomment" v-show="!isFocus">
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
-      <span class="comment">
+      <!-- 文章评论图标 -->
+      <span class="comment" @click="$router.push({path:'/comment'})">
         <i class="iconfont iconpinglun-"></i>
         <em>{{article.comment_length}}</em>
       </span>
       <!-- 文章收藏 -->
       <i class="iconfont iconshoucang" :class="{artivleClass:article.has_star}" @click="starArticle"></i>
+      <!-- 文章分享 -->
       <i class="iconfont iconfenxiang"></i>
     </div>
     <!-- 一级 评论 -->

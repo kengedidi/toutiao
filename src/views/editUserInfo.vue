@@ -1,4 +1,5 @@
 <template>
+<!-- 个人资料编辑 -->
   <div class="editUserInfo">
     <!-- 顶部区域 -->
     <myheader title="编辑资料">

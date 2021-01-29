@@ -14,7 +14,7 @@
       <!-- 点图标跳转到个人中心 -->
       <div class="user" @click="$router.push({ path: `/personal/${id}` })">
         <!-- 用到了icon组件 -->
-        <van-icon name="manager-o" />
+        <van-icon name="manager-o" /> 
       </div>
     </div>
 
