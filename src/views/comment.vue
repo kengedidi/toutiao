@@ -21,15 +21,17 @@
           </div>
           <span>回复</span>
         </div>
-          <!-- --------- 二层评论 -->
-         <div class="commentItem" v-if="value.parent">
+          <!-- --------- 二层评论  有问题：因为你永远不知道评论有多少层，所以要封装-->
+         <!-- <div class="commentItem" v-if="value.parent">
             <div class="top">
               <span class="left">作者:{{value.parent.user.nickname}}  评论时间:{{value.parent.create_date | offsetTimeFormat}}</span>
               <span class="right">回复</span>
             </div>
-            <div class="buttom">{{value.parent.content}}</div>
-         </div>
-          <!-- --------- -->
+            <div class="buttom">{{value.parent.content}}</div> -->
+         <!-- </div> -->
+          <!-- ---------- -->
+          <commentltem v-if="value.parent" :parent="value.parent"></commentltem>
+          <!-- ---------- -->
         <div class="text">{{value.content}}</div>
       </div>
     </div>
@@ -39,7 +41,9 @@
 import myheader from "@/components/myheader.vue";
 import { getPostCommentList } from "@/apis/post.js";
 import axios from '@/utils/myaxios.js'
-// 过滤器
+// 引入封装的评论块
+import commentltem from '@/components/commentltem.vue'
+ // 过滤器
 import {offsetTimeFormat} from '@/utils/myfilters.js'
 export default {
   data() {
@@ -48,7 +52,7 @@ export default {
     };
   },
   components: {
-    myheader,
+    myheader,commentltem
   },
   filters: {
     offsetTimeFormat
