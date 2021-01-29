@@ -21,6 +21,15 @@
           </div>
           <span>回复</span>
         </div>
+          <!-- --------- 二层评论 -->
+         <div class="commentItem" v-if="value.parent">
+            <div class="top">
+              <span class="left">作者:{{value.parent.user.nickname}}  评论时间:{{value.parent.create_date | offsetTimeFormat}}</span>
+              <span class="right">回复</span>
+            </div>
+            <div class="buttom">{{value.parent.content}}</div>
+         </div>
+          <!-- --------- -->
         <div class="text">{{value.content}}</div>
       </div>
     </div>
@@ -54,12 +63,29 @@ export default {
         v.user.head_img = axios.defaults.baseURL + v.user.head_img
         return v
     });
+    console.log(this.commentList);
   },
 };
 </script>
 
 <style lang='less' scoped>
 .lists {
+  // 加样式
+  .commentItem{
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    .top{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      color: #ccc;
+      font-size: 12px;
+    }
+    .buttom {
+      padding: 10px 0;
+    }
+  };
   // border-top: 5px solid #ddd;
   padding: 0 15px;
   .item {
