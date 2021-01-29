@@ -11,12 +11,13 @@
     </myheader>
 
     <div class="lists">
+      <!-- 一个item 就是一个新闻块 -->
       <div class="item" v-for="value in commentList" :key="value.id">
         <div class="head">
           <img :src="value.user.head_img" alt />
           <div>
             <p>{{value.user.nickname}}</p>
-            <span>{{value.user.create_date}}</span>
+            <span>{{value.user.create_date | offsetTimeFormat}}</span>
           </div>
           <span>回复</span>
         </div>
@@ -25,11 +26,12 @@
     </div>
   </div>
 </template>
-
 <script>
 import myheader from "@/components/myheader.vue";
 import { getPostCommentList } from "@/apis/post.js";
 import axios from '@/utils/myaxios.js'
+// 过滤器
+import {offsetTimeFormat} from '@/utils/myfilters.js'
 export default {
   data() {
     return {
@@ -38,6 +40,9 @@ export default {
   },
   components: {
     myheader,
+  },
+  filters: {
+    offsetTimeFormat
   },
   async mounted() {
     //获取文章ID
@@ -49,7 +54,6 @@ export default {
         v.user.head_img = axios.defaults.baseURL + v.user.head_img
         return v
     });
-    console.log( this.commentList);
   },
 };
 </script>
