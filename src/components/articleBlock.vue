@@ -1,5 +1,5 @@
 <template>
-  <!-- 这个文件用来封装文章块 -->
+  <!-- 这个文件用来封装文章新闻块 -->
   <div
     class="single"
     v-if="post.type == 1 && post.cover.length < 3"

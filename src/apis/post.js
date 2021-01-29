@@ -31,3 +31,10 @@ export const starThisArticle = function (id) {
   })
 }
 
+//根据文章ID获取所有评论数据
+export const getPostCommentList = function (id) {
+  return axios({
+    //get
+    url: '/post_comment/' + id
+  })
+}

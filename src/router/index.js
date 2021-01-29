@@ -68,7 +68,7 @@ const router = new VueRouter({
     //评论页面 
     {
       name: 'comment',
-      path: '/comment',
+      path: '/comment/:id',
       component: () => import('@/views/comment.vue'),
       // meta: { keepAlive: false } // false为不缓存
     },

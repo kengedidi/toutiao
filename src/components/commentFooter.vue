@@ -3,7 +3,7 @@
     <div class="addcomment" v-show="!isFocus">
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
       <!-- 文章评论图标 -->
-      <span class="comment" @click="$router.push({path:'/comment'})">
+      <span class="comment" @click="$router.push({path:'/comment/' + article.id})">
         <i class="iconfont iconpinglun-"></i>
         <em>{{article.comment_length}}</em>
       </span>
@@ -46,7 +46,7 @@ export default {
     },
     // 收藏
    async starArticle(){
-      // console.log(this.article);
+      console.log(this.article);
       let res = await starThisArticle(this.article.id)
       console.log(res);
       // 提示用户

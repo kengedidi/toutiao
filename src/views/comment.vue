@@ -1,25 +1,26 @@
 <template>
-<!-- 评论页面 -->
+  <!-- 评论页面 -->
   <div class="comments">
     <!-- 头部 -->
     <myheader title="精彩评论">
-      <span slot="left"
-            class="iconfont iconjiantou2"
-            @click="$router.back()"></span>
+      <span
+        slot="left"
+        class="iconfont iconjiantou2"
+        @click="$router.back()"
+      ></span>
     </myheader>
 
     <div class="lists">
-      <div class="item">
+      <div class="item" v-for="value in commentList" :key="value.id">
         <div class="head">
-          <img src="../assets/logo.png"
-               alt />
+          <img :src="value.user.head_img" alt />
           <div>
-            <p>火星网友</p>
-            <span>2小时前</span>
+            <p>{{value.user.nickname}}</p>
+            <span>{{value.user.create_date}}</span>
           </div>
           <span>回复</span>
         </div>
-        <div class="text">文章说得很有道理</div>
+        <div class="text">{{value.content}}</div>
       </div>
     </div>
   </div>
@@ -27,10 +28,29 @@
 
 <script>
 import myheader from "@/components/myheader.vue";
+import { getPostCommentList } from "@/apis/post.js";
+import axios from '@/utils/myaxios.js'
 export default {
+  data() {
+    return {
+      commentList: [],
+    };
+  },
   components: {
-    myheader
-  }
+    myheader,
+  },
+  async mounted() {
+    //获取文章ID
+    let id = this.$route.params.id;
+    //调用api方法获取所有评论数据
+    let res = await getPostCommentList(id);
+    //数据改造，并且赋值commentList成员，在渲染页面
+    this.commentList = res.data.data.map((v) => {
+        v.user.head_img = axios.defaults.baseURL + v.user.head_img
+        return v
+    });
+    console.log( this.commentList);
+  },
 };
 </script>
 
