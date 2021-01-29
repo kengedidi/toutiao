@@ -40,6 +40,9 @@ export default {
       type: Object, //类型对象
       required: true, //必须传值
     },
+    comment:{
+      type: Object
+    }
   },
   data() {
     return {
@@ -53,6 +56,9 @@ export default {
     // 获取焦点时触发
     handlerFocus() {
       this.isFocus = !this.isFocus;
+      setTimeout(() => {
+        this.$refs.commtext.focus();
+      },0)
     },
     // 收藏
     async starArticle() {
@@ -80,6 +86,11 @@ export default {
       }
     },
   },
+  watch: {
+    comment(){
+      this.isFocus = true
+    }
+  }
 };
 </script>
 

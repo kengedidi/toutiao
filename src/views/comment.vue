@@ -19,7 +19,7 @@
             <p>{{ value.user.nickname }}</p>
             <span>{{ value.user.create_date | offsetTimeFormat }}</span>
           </div>
-          <span>回复</span>
+          <span @click="replayComment(value)">回复</span>
         </div>
         <!-- --------- 二层评论  有问题：因为你永远不知道评论有多少层，所以要封装-->
         <!-- <div class="commentItem" v-if="value.parent">
@@ -35,7 +35,7 @@
         <div class="text">{{ value.content }}</div>
       </div>
     </div>
-    <commentFooter :article="post" @refreshData="refreshData"></commentFooter>
+    <commentFooter :article="post" @refreshData="refreshData" :comment="temp"></commentFooter>
   </div>
 </template>
 <script>
@@ -53,7 +53,8 @@ export default {
   data() {
     return {
       commentList: [],
-      post:{}
+      post:{},
+      temp:{}
     };
   },
   components: {
@@ -84,7 +85,14 @@ export default {
     },
     //子组件发表评论后 触发 -- 刷新页面 
     refreshData(){
-        this.init()
+      // 刷新页面
+      this.init()
+      // 回到顶部
+      window.scrollTo(0,0)
+    },
+    // 点击回复按钮，显示输入框
+    replayComment(value){
+      this.temp = value
     }
   }
 };
