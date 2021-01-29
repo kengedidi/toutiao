@@ -35,6 +35,7 @@
         <div class="text">{{value.content}}</div>
       </div>
     </div>
+    <commentFooter :article="post"></commentFooter>
   </div>
 </template>
 <script>
@@ -45,14 +46,18 @@ import axios from '@/utils/myaxios.js'
 import commentltem from '@/components/commentltem.vue'
  // 过滤器
 import {offsetTimeFormat} from '@/utils/myfilters.js'
+// 复用 底部评论块
+import commentFooter from '@/components/commentFooter.vue'
+import {getPostById} from '@/apis/user.js'
 export default {
   data() {
     return {
       commentList: [],
+      post:{}
     };
   },
   components: {
-    myheader,commentltem
+    myheader,commentltem,commentFooter
   },
   filters: {
     offsetTimeFormat
@@ -67,7 +72,11 @@ export default {
         v.user.head_img = axios.defaults.baseURL + v.user.head_img
         return v
     });
-    console.log(this.commentList);
+    // console.log(this.commentList);
+
+    // 获取文章ID获取 文章详情
+    this.post = (await getPostById(id)).data.data
+    console.log(this.post);
   },
 };
 </script>
@@ -127,5 +136,8 @@ export default {
       padding: 20px 0 10px 0;
     }
   }
+}
+.comments{
+  padding-bottom:70px;
 }
 </style>
