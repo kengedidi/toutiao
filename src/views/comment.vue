@@ -30,12 +30,12 @@
             <div class="buttom">{{value.parent.content}}</div> -->
         <!-- </div> -->
         <!-- ---------- -->
-        <commentltem v-if="value.parent" :parent="value.parent"></commentltem>
+        <commentltem v-if="value.parent" :parent="value.parent" @send="replayComment"></commentltem>
         <!-- ---------- -->
         <div class="text">{{ value.content }}</div>
       </div>
     </div>
-    <commentFooter :article="post" @refreshData="refreshData" :comment="temp"></commentFooter>
+    <commentFooter :article="post" @refreshData="refreshData" :comment="temp" @reset="temp=null"></commentFooter>
   </div>
 </template>
 <script>
@@ -81,7 +81,7 @@ export default {
 
     // 获取文章ID获取 文章详情
     this.post = (await getPostById(id)).data.data
-    console.log(this.post);
+    // console.log(this.post);
     },
     //子组件发表评论后 触发 -- 刷新页面 
     refreshData(){

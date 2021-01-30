@@ -24,7 +24,7 @@
       <textarea ref="commtext" rows="5" v-model="content"></textarea>
       <div>
         <span @click="sendComment">发 送</span>
-        <span @click="handlerFocus">取 消</span>
+        <span @click="cancelComment">取 消</span>
       </div>
     </div>
   </div>
@@ -40,6 +40,7 @@ export default {
       type: Object, //类型对象
       required: true, //必须传值
     },
+     // 这就是用户单击回复时的对应的评论对象
     comment:{
       type: Object
     }
@@ -72,23 +73,41 @@ export default {
     },
     // 发表一级评论
     async sendComment() {
+      // 去除文字头尾空白
       if (this.content.trim().length == 0) {
         this.$toast("请先输入发表的内容");
         return;
       }
       let data = { content: this.content };
+      // 二层评论:
+      // 如果是单击回复，就会有comment对象，说明有上一级评论
+      // 只有传递了评论对象，才弹出输入框
+      if(this.comment){ 
+        data.parent_id = this.comment.id
+      }
       let res = await publishComment(this.article.id, data);
       if (res.status == 200) {
         this.$toast.success(res.data.message); //用户提示
         this.isFocus = !this.isFocus //隐藏输入框
         this.content = '';  //输入框清空
-        this.$emit('refreshData')
+        this.$emit('refreshData') //刷新评论页面
       }
     },
+    // 取消评论
+    cancelComment(){
+        // 不能仅仅重置 isFocus,否则会造成第二次单击同一个回复按钮的时候不再触发侦听器，也就会造成输入框不再弹出
+      this.isFocus = false //关闭文本框
+      this.content = '' //清空文本框
+       // 不能在子组件中直接修改props成员的值，这个值只能由父组件进行修改
+      this.$emit('reset') //重置comment对象的值为null
+    }
   },
   watch: {
     comment(){
-      this.isFocus = true
+      if(this.comment){
+        this.isFocus = true
+      console.log(this.comment); 
+      }
     }
   }
 };

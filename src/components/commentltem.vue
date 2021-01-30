@@ -10,7 +10,7 @@
         <span>{{ parent.user.nickname }}</span> &nbsp;&nbsp;&nbsp;
         <span>{{ parent.user.create_date | offsetTimeFormat}}</span>
       </div>
-      <span>回复</span>
+      <span @click="sendComment(parent)">回复</span>
     </div>
     <div class="bottom">{{ parent.content }}</div>
   </div>
@@ -27,6 +27,11 @@ export default {
   filters: {
     // 注册过滤器
     offsetTimeFormat
+  },
+  methods: {
+    sendComment(parent){
+        this.$emit('send',parent)
+    }
   }
 };
 </script>
