@@ -76,8 +76,7 @@ const router = new VueRouter({
     {
       name: 'cateManager',
       path: '/cateManager',
-      component: () => import('@/views/cateManager.vue'),
-      // meta: { keepAlive: false } // false为不缓存
+      component: () => import('@/views/cateManager.vue')
     },
   ]
 })

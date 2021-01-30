@@ -5,12 +5,14 @@
             class="iconfont iconjiantou2"
             @click="$router.back()"></span>
     </myheader>
+     <!-- 删除频道-->
     <div class="mychannel">
       <h3>点击删除频道</h3>
       <div class="list">
         <span>娱乐</span>
       </div>
     </div>
+    <!-- 添加频道 -->
     <div class="youchannel">
       <h3>点击添加频道</h3>
       <div class="list">
@@ -22,9 +24,20 @@
 
 <script>
 import myheader from "@/components/myheader.vue";
+import {getCateList} from '@/apis/category.js'
 export default {
+  data () {
+    return {
+      list:[]
+    }
+  },
   components: {
     myheader
+  },
+  async mounted () {
+   let res = await getCateList()
+   this.list = res.data.data
+   console.log(this.list);
   }
 }
 </script>

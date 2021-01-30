@@ -1,11 +1,14 @@
 <template>
-<!-- 文章详情页面 -->
+  <!-- 文章详情页面 -->
   <div class="articaldetail">
     <!-- 文章顶部标题 -->
     <div class="header">
       <div class="left">
         <!--  @click="$router.back() 返回上一层 -->
-        <van-icon name="arrow-left back" @click="$router.push({name:'index'})" />
+        <van-icon
+          name="arrow-left back"
+          @click="$router.push({ name: 'index' })"
+        />
         <span class="iconfont iconnew new"></span>
       </div>
       <!-- -----------------关注 -->
@@ -40,73 +43,104 @@
         style="width: 100%"
       ></video>
       <!-- -----------------点赞 -->
-      <div class="opt"> 
+      <div class="opt">
         <span
           class="like"
           @click="likeArticle"
-          :class="{likeClass : post.has_like}"
+          :class="{ likeClass: post.has_like }"
           :key="post.id"
         >
-          <van-icon class="likevan" name="good-job-o" />{{ post.comment_length || 0}}
+          <van-icon class="likevan" name="good-job-o" />{{
+            post.comment_length || 0
+          }}
         </span>
         <span class="chat"> <van-icon name="chat" class="w" />微信 </span>
       </div>
     </div>
+
     <!-- 精彩跟帖 -->
     <div class="keeps">
       <h2>精彩跟帖</h2>
-      <div class="item">
+      <div class="item" v-for="value in list" :key="value.id">
         <div class="head">
-          <img src="../assets/logo.png" alt />
+          <img :src="value.user.head_img" alt />
           <div>
-            <p>火星网友</p>
-            <span>2小时前</span>
+            <p>{{ value.user.nickname }}</p>
+            <span>{{ value.create_date | offsetTimeFormat }}</span>
           </div>
-          <span>回复</span>
+          <span @click="artReplya(value)">回复</span>
         </div>
-        <div class="text">文章说得很有道理</div>
+        <!-- 封装的组件 -->
+        <commentltem
+          v-if="value.parent"
+          :parent="value.parent"
+          @send="artReplya"
+        ></commentltem>
+
+        <div class="text">{{ value.content }}</div>
       </div>
       <div class="more">更多跟帖</div>
     </div>
-      <!-- 底部评论块 -->
-    <commentFooter :article="post"></commentFooter>
+    <!-- 底部评论块 -->
+    <commentFooter
+      :article="post"
+      @artrefresh="artrefresh"
+      :comment="temp"
+      @reset="temp = null"
+    ></commentFooter>
   </div>
 </template>
 <script>
 // 引入封装获取文章详情api
-import {
-  getPostById,
-  followUser,
-  unfollowUser,
-} from "@/apis/user.js";
-import {likeThisArticle} from '@/apis/post.js'
+import { getPostById, followUser, unfollowUser } from "@/apis/user.js";
+import { likeThisArticle } from "@/apis/post.js";
 // 引入封装的过滤器（时间格式化）
 import { singledateFormat } from "@/utils/myfilters.js";
 import axios from "@/utils/myaxios.js";
-import commentFooter from '@/components/commentFooter.vue'
+import commentFooter from "@/components/commentFooter.vue";
+import { getPostCommentList } from "@/apis/post.js";
+import { offsetTimeFormat } from "@/utils/myfilters.js";
+import commentltem from "@/components/commentltem.vue";
 export default {
   components: {
-    commentFooter
+    commentFooter,
+    commentltem,
   },
   data() {
     return {
       post: {},
       // 把axios赋值到我定义的当前实例成员，变成当前实例的成员
       axios,
+      list: [],
+      temp: {},
     };
   },
-  async mounted() {
-    // 获取文章id
-    let id = this.$route.params.id;
-    let res = await getPostById(id);
-    this.post = res.data.data;
-    console.log(this.post);
+  mounted() {
+    this.init();
   },
   // 注册过滤器
   filters: {
     singledateFormat,
+    offsetTimeFormat,
   },
   methods: {
+    //封装
+    async init() {
+      // 获取文章id
+      let id = this.$route.params.id;
+      // 获取文章详情
+      let res = await getPostById(id);
+      this.post = res.data.data;
+      // console.log(this.post);
+
+      // 展示评论
+      let list = (await getPostCommentList(id)).data.data;
+      this.list = list.map((v) => {
+        v.user.head_img = axios.defaults.baseURL + v.user.head_img;
+        return v;
+      });
+      // console.log(this.list);
+    },
     // 关注 -- 点击关注按钮触发
     async ClickFollowUser() {
       try {
@@ -123,10 +157,10 @@ export default {
           console.log(res);
         }
 
-          // 实现页面刷新
-          this.post.has_follow = !this.post.has_follow;
-          //  提示用户
-          this.$toast.success(res.data.message);
+        // 实现页面刷新
+        this.post.has_follow = !this.post.has_follow;
+        //  提示用户
+        this.$toast.success(res.data.message);
       } catch (err) {}
     },
     // 点赞 -- 点击点赞按钮触发
@@ -145,6 +179,17 @@ export default {
       }
       //更新页面 --切换页面样式
       this.post.has_like = !this.post.has_like;
+    },
+    //  文章详情的下方的 评论块，刷新页面
+    artrefresh() {
+      // 刷新页面
+      this.init();
+      // 回到顶部
+      window.scrollTo(0,0);
+    },
+    artReplya(value) {
+      this.temp = value;
+      // console.log(this.item);
     },
   },
 };
@@ -227,7 +272,7 @@ export default {
   }
   //点赞--动态加样式
   .likeClass {
-    border:1px solid red;
+    border: 1px solid red;
     color: red;
   }
   .w {

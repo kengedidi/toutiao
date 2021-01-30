@@ -94,6 +94,7 @@ export default {
         this.content = '';  //输入框清空
         this.$emit('refreshData') //刷新评论页面
         this.$emit('reset') //重置
+        this.$emit('artrefresh')
       }
     },
     // 取消评论
@@ -108,6 +109,7 @@ export default {
   watch: {
     comment(){
       if(this.comment){
+        console.log(this.comment);
         this.isFocus = true
           setTimeout(()=>{
             this.$refs.commtext.focus()
