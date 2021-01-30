@@ -92,6 +92,14 @@ export default {
     }});
     //页面一打开就加载当前栏目对应文章数据（栏目已经设置如果登陆过就下标1，没登陆下标就0 ，页面一开始显示头条栏目的文章）
     this.init();
+
+    // ------------- 栏目管理
+    document.querySelector('.van-sticky').onclick = (e) => {
+        console.log(e.target.className);
+        if(e.target.className == 'van-sticky'){ // 说明单击的位置是伪元素的位置 ---入口
+          this.$router.push({name:'cateManager'}) 
+        }
+    }
   },
   watch: {
     // 监听栏目---切换时触发
@@ -197,6 +205,14 @@ export default {
   &::after{
     content:'+';
     position: absolute;
+    width: 51px;
+    height: 44px;
+    background-color: #fff;
+    top: 0;
+    right: 0;
+    text-align: center;
+    line-height: 42px;
+    font-size: 35px;
   }
 }
 </style>	
