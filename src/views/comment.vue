@@ -21,17 +21,7 @@
           </div>
           <span @click="replayComment(value)">回复</span>
         </div>
-        <!-- --------- 二层评论  有问题：因为你永远不知道评论有多少层，所以要封装-->
-        <!-- <div class="commentItem" v-if="value.parent">
-            <div class="top">
-              <span class="left">作者:{{value.parent.user.nickname}}  评论时间:{{value.parent.create_date | offsetTimeFormat}}</span>
-              <span class="right">回复</span>
-            </div>
-            <div class="buttom">{{value.parent.content}}</div> -->
-        <!-- </div> -->
-        <!-- ---------- -->
         <commentltem v-if="value.parent" :parent="value.parent" @send="replayComment"></commentltem>
-        <!-- ---------- -->
         <div class="text">{{ value.content }}</div>
       </div>
     </div>

@@ -59,7 +59,7 @@ const router = new VueRouter({
       //   keepAlive: false
       // } // false为不缓存
     },
-    //我的收藏comment
+    //我的收藏
     {
       name: 'mystars',
       path: '/mystars',
@@ -70,6 +70,13 @@ const router = new VueRouter({
       name: 'comment',
       path: '/comment/:id',
       component: () => import('@/views/comment.vue'),
+      // meta: { keepAlive: false } // false为不缓存
+    }, 
+    //栏目管理页面
+    {
+      name: 'cateManager',
+      path: '/cateManager',
+      component: () => import('@/views/cateManager.vue'),
       // meta: { keepAlive: false } // false为不缓存
     },
   ]

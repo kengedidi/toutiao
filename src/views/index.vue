@@ -192,4 +192,11 @@ export default {
     padding: 0 10px;
   }
 }
+/deep/ .van-sticky{
+  padding-right: 50px;
+  &::after{
+    content:'+';
+    position: absolute;
+  }
+}
 </style>	

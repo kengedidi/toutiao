@@ -109,7 +109,9 @@ export default {
     comment(){
       if(this.comment){
         this.isFocus = true
-      console.log(this.comment); 
+          setTimeout(()=>{
+            this.$refs.commtext.focus()
+          },0)
       }
     }
   }
