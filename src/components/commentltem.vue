@@ -3,7 +3,8 @@
     <!-- 添加上一级评论结构 -->
     <!-- v-if:到底要不要再继续递归，只有有parent才需要继续
     :parent:将当前评论的parent属性做为参数传递 -->
-    <ci v-if='parent.parent' :parent='parent.parent'></ci>
+    <!-- @send="sendComment" : 递归组件中的回复评论 -->
+    <ci @send="sendComment" v-if='parent.parent' :parent='parent.parent'></ci>
   
     <div class="top">
       <div class="left">

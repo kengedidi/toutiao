@@ -70,7 +70,7 @@ export default {
    async init(){
       //获取文章ID
     let id = this.$route.params.id;
-    //调用api方法获取所有评论数据
+    // 
     let res = await getPostCommentList(id);
     //数据改造，并且赋值commentList成员，在渲染页面
     this.commentList = res.data.data.map((v) => {

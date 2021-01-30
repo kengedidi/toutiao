@@ -42,7 +42,8 @@ export default {
     },
      // 这就是用户单击回复时的对应的评论对象
     comment:{
-      type: Object
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -83,6 +84,7 @@ export default {
       // 如果是单击回复，就会有comment对象，说明有上一级评论
       // 只有传递了评论对象，才弹出输入框
       if(this.comment){ 
+        // console.log('=====',this.comment);
         data.parent_id = this.comment.id
       }
       let res = await publishComment(this.article.id, data);
@@ -91,6 +93,7 @@ export default {
         this.isFocus = !this.isFocus //隐藏输入框
         this.content = '';  //输入框清空
         this.$emit('refreshData') //刷新评论页面
+        this.$emit('reset') //重置
       }
     },
     // 取消评论
