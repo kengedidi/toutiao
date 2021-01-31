@@ -78,6 +78,12 @@ const router = new VueRouter({
       path: '/cateManager',
       component: () => import('@/views/cateManager.vue')
     },
+     // 搜索页面
+     {
+      name: 'search',
+      path: '/search',
+      component: () => import('@/views/search.vue')
+    },
   ]
 })
 // 

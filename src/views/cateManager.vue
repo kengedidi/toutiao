@@ -10,25 +10,15 @@
     <!-- 删除频道-->
     <div class="mychannel">
       <h3>点击删除频道</h3>
-      <div class="list">
-        <span
-          v-for="(value, index) in cateList"
-          :key="value.id"
-          @click="remove(value, index)"
-          >{{ value.name }}</span
-        >
+      <div class="list"><span v-for="(value, index) in cateList" :key="value.id" @click="remove(value, index)"
+          >{{ value.name }}</span>
       </div>
     </div>
     <!-- 添加频道 -->
     <div class="youchannel">
       <h3>点击添加频道</h3>
-      <div class="list">
-        <span
-          v-for="(value, index) in tempList"
-          :key="value.id"
-          @click="add(value, index)"
-          >{{ value.name }}</span
-        >
+      <div class="list"><span v-for="(value, index) in tempList"
+          :key="value.id"  @click="add(value, index)">{{ value.name }}</span>
       </div>
     </div>
   </div>
@@ -54,17 +44,13 @@ export default {
       //添加
       // 将已移除的栏目存储到本地存储,约定 heimatoutiao_remove_cate_59
       this.tempList.push(value);
-      localStorage.setItem(
-        "heimatoutiao_remove_cate_59",
-        JSON.stringify(this.tempList)
+      localStorage.setItem( "heimatoutiao_remove_cate_59",JSON.stringify(this.tempList)
       );
 
       //移除
       // 将已移除的栏目存储到本地存储,约定 heimatoutiao_add_cate_59
       this.cateList.splice(index, 1);
-      localStorage.setItem(
-        "heimatoutiao_add_cate_59",
-        JSON.stringify(this.cateList)
+      localStorage.setItem("heimatoutiao_add_cate_59",JSON.stringify(this.cateList)
       );
     },
     // 添加栏目
@@ -72,17 +58,11 @@ export default {
       //先添加 再移除
       //添加
       this.cateList.unshift(valie);
-      localStorage.setItem(
-        "heimatoutiao_add_cate_59",
-        JSON.stringify(this.cateList)
-      );
+      localStorage.setItem("heimatoutiao_add_cate_59",JSON.stringify(this.cateList) );
 
       //移除
       this.tempList.splice(index, 1);
-      localStorage.setItem(
-        "heimatoutiao_remove_cate_59",
-        JSON.stringify(this.tempList)
-      );
+      localStorage.setItem("heimatoutiao_remove_cate_59",JSON.stringify(this.tempList));
     },
   },
   // 组件加载之后，应该先从本地存储中获取数据，如果有数据，则加载本地存储，如果没有数据再发起数据请求

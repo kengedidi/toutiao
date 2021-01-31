@@ -6,7 +6,7 @@
         <span class="iconfont iconnew"></span>
       </div>
       <!-- 点击搜索跳转到单独的搜索页面 -->
-      <div class="search" @click="$router.push({ name: 'Search' })">
+      <div class="search" @click="$router.push({ name: 'search' })">
         <!-- 用到了icon组件 -->
         <van-icon name="search" />
         <span>搜索商品</span>
