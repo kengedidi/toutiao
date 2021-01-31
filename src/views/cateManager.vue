@@ -87,6 +87,7 @@ export default {
   },
   // 组件加载之后，应该先从本地存储中获取数据，如果有数据，则加载本地存储，如果没有数据再发起数据请求
   async mounted() {
+    // 如果指定名称的键不存在，下面的代码获取到了null,并不会报错
     this.cateList = JSON.parse(
       localStorage.getItem("heimatoutiao_add_cate_59")
     );

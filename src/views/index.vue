@@ -75,10 +75,24 @@ export default {
     };
   },
   async mounted() {
-    // 当页面加载完之后加载 栏目的数据
-    let res = await getCateList();
-    // console.log(res); //获取到栏目的所有数据
-    this.catelist = res.data.data; // console.log(this.catelist);
+    // ------------- 首页栏目
+    this.catelist = JSON.parse(localStorage.getItem("heimatoutiao_add_cate_59")) || [];
+    if (this.catelist) {
+          // 如果本地存储中有数据，获取的本地存储中并没有关注或头条，我们需要手动添加
+          // 判断是否登陆
+          if(localStorage.getItem('toutiao_59_token')){
+             // 已登陆，加关注和头条
+              this.catelist.unshift({id:0,name:'关注',is_top:1},{id:999,name:'头条',is_top:1})
+          }else{
+            // 未登陆， 加头条
+               this.catelist.unshift({id:999,name:'头条',is_top:1})
+          }
+    } else {
+      // 当页面加载完之后加载 栏目的数据
+      let res = await getCateList();
+      // console.log(res); //获取到栏目的所有数据
+      this.catelist = res.data.data; // console.log(this.catelist);
+    }
     //--------------------------
     // 数据改造:每个栏目有属于自己的新闻数据,且能找到的操作互不干扰,当前栏目数据结构不能满足这个需求
     // map:可以对数组进行遍历，执行回函数，将回调函数的返回值存储到内部创建的数组，最终将数组返回
@@ -99,7 +113,7 @@ export default {
     // ------------- 栏目管理
     document.querySelector(".van-sticky").onclick = (e) => {
       console.log(e.target.className);
-      if (e.target.className == "van-sticky") {
+      if (e.target.className.indexOf('van-sticky') != -1) {
         // 说明单击的位置是伪元素的位置 ---入口
         this.$router.push({ name: "cateManager" });
       }
