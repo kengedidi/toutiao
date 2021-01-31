@@ -14,7 +14,12 @@
     <!-- 历史记录 -->
     <div class="historyList">
       <h2>历史记录</h2>
-      <router-link to="">美女</router-link>
+      <div
+        v-for="(value, index) in history"
+        :key="index"
+        @click="search(value)"
+        >{{ value }}</div
+      >
     </div>
     <!-- 搜索结果 -->
     <div class="resultList">
@@ -23,7 +28,8 @@
         :to="'/articleDetail/' + value.id"
         v-for="value in list"
         :key="value.id"
-      >{{value.title}}</router-link>
+        >{{ value.title }}</router-link
+      >
     </div>
   </div>
 </template>
@@ -34,15 +40,35 @@ export default {
   data() {
     return {
       userKey: "",
-      list: [],
-    };
+      list: [], 
+      history: [],
+    }
+  },
+  mounted() {
+    this.history =
+      JSON.parse(localStorage.getItem("heimatoutiao_search_59")) || [];
   },
   methods: {
+    search(value) {
+      this.userKey = value;
+      this.onSearch();
+    },
     async onSearch() {
       if (this.userKey.trim().length == 0) {
         this.$toast.fail("请先输入搜索的内容");
       } else {
+        // 先判断是否存在了当前的关键字
+        let index = this.history.indexOf(this.userKey); //存在就返回它的下标，不存在就返回-1
+        if (index != -1) {
+          //存在 ==》 删除
+          this.history.splice(index, 1);
+        }
+        // 将当前的关键字添加到搜索历史的第一位置
+        this.history.unshift(this.userKey);
+        // 将数组存储到本地存储
+        localStorage.setItem("heimatoutiao_search_59", JSON.stringify(this.history));
         let res = await searchPost(this.userKey);
+
         this.list = res.data.data;
         console.log(this.list);
       }
