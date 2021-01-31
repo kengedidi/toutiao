@@ -15,27 +15,38 @@
     <div class="historyList">
       <h2>历史记录</h2>
       <router-link to="">美女</router-link>
-      <router-link to="">美女</router-link>
     </div>
     <!-- 搜索结果 -->
     <div class="resultList">
       <h2>搜索结果</h2>
-      <router-link to="/articleDetail/"></router-link>
+      <router-link
+        :to="'/articleDetail/' + value.id"
+        v-for="value in list"
+        :key="value.id"
+      >{{value.title}}</router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { searchPost } from "@/apis/post.js";
 export default {
   data() {
     return {
       userKey: "",
+      list: [],
     };
   },
   methods: {
-     onSearch(){
-
-    }
+    async onSearch() {
+      if (this.userKey.trim().length == 0) {
+        this.$toast.fail("请先输入搜索的内容");
+      } else {
+        let res = await searchPost(this.userKey);
+        this.list = res.data.data;
+        console.log(this.list);
+      }
+    },
   },
 };
 </script>

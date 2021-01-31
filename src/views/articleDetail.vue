@@ -7,7 +7,7 @@
         <!--  @click="$router.back() 返回上一层 -->
         <van-icon
           name="arrow-left back"
-          @click="$router.push({ name: 'index' })"
+          @click="$router.back()"
         />
         <span class="iconfont iconnew new"></span>
       </div>
