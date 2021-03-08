@@ -21,70 +21,79 @@
           </div>
           <span @click="replayComment(value)">回复</span>
         </div>
-        <commentltem v-if="value.parent" :parent="value.parent" @send="replayComment"></commentltem>
+
+        <commentltem
+          v-if="value.parent"
+          :parent="value.parent"
+          @send="replayComment"
+        ></commentltem>
+
         <div class="text">{{ value.content }}</div>
       </div>
     </div>
-    <commentFooter :article="post" @refreshData="refreshData" :comment="temp" @reset="temp=null"></commentFooter>
+    <commentFooter
+      :article="post"
+      @refreshData="refreshData"
+      :comment="temp"
+      @reset="temp = null"
+    ></commentFooter>
   </div>
 </template>
 <script>
 import myheader from "@/components/myheader.vue";
 import { getPostCommentList } from "@/apis/post.js";
-import axios from '@/utils/myaxios.js'
+import axios from "@/utils/myaxios.js";
 // 引入封装的评论块
-import commentltem from '@/components/commentltem.vue'
- // 过滤器
-import {offsetTimeFormat} from '@/utils/myfilters.js'
+import commentltem from "@/components/commentltem.vue";
+// 过滤器
+import { offsetTimeFormat } from "@/utils/myfilters.js";
 // 复用 底部评论块
-import commentFooter from '@/components/commentFooter.vue'
-import {getPostById} from '@/apis/user.js'
+import commentFooter from "@/components/commentFooter.vue";
+import { getPostById } from "@/apis/user.js";
 export default {
   data() {
     return {
       commentList: [],
-      post:{},
-      temp:{}
+      post: {},
+      temp: {},
     };
   },
   components: {
-    myheader,commentltem,commentFooter
+    myheader,
+    commentltem,
+    commentFooter,
   },
   filters: {
-    offsetTimeFormat
+    offsetTimeFormat,
   },
-   mounted() {
-      this.init()
+  mounted() {
+    this.init();
   },
   methods: {
-   async init(){
+    async init() {
       //获取文章ID
-    let id = this.$route.params.id;
-    // 
-    let res = await getPostCommentList(id);
-    //数据改造，并且赋值commentList成员，在渲染页面
-    this.commentList = res.data.data.map((v) => {
-        v.user.head_img = axios.defaults.baseURL + v.user.head_img
-        return v
-    });
-    // console.log(this.commentList);
-
-    // 获取文章ID获取 文章详情
-    this.post = (await getPostById(id)).data.data
-    // console.log(this.post);
+      let id = this.$route.params.id;
+      let res = await getPostCommentList(id);
+      //数据改造，并且赋值commentList成员，在渲染页面
+      this.commentList = res.data.data.map((v) => {
+        v.user.head_img = axios.defaults.baseURL + v.user.head_img;
+        return v;
+      });
+      // 获取文章ID获取 文章详情
+      this.post = (await getPostById(id)).data.data;
     },
-    //子组件发表评论后 触发 -- 刷新页面 
-    refreshData(){
+    //子组件发表评论后 触发 -- 刷新页面
+    refreshData() {
       // 刷新页面
-      this.init()
+      this.init();
       // 回到顶部
-      window.scrollTo(0,0)
+      window.scrollTo(0, 0);
     },
     // 点击回复按钮，显示输入框
-    replayComment(value){
-      this.temp = value
-    }
-  }
+    replayComment(value) {
+      this.temp = value;
+    },
+  },
 };
 </script>
 

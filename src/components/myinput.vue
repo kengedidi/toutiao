@@ -58,7 +58,7 @@ export default {
               message: this.msg, // 消息文本内容
               position: "top", // 提示框显示的时长
               duration: 2000, // 提示框显示的位置
-            });
+            }); 
           }
         }
       }

@@ -82,7 +82,7 @@ export default {
       let data = { content: this.content };
       // 二层评论:
       // 如果是单击回复，就会有comment对象，说明有上一级评论
-      // 只有传递了评论对象，才弹出输入框
+      // 只有传递了评论对象，才弹出输入框1
       if(this.comment){ 
         // console.log('=====',this.comment);
         data.parent_id = this.comment.id
